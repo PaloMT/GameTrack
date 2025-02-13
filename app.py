@@ -5,7 +5,6 @@ import webbrowser
 
 app = Flask(__name__)
 
-# Configuración de conexión a la base de datos
 def get_db_connection():
     try:
         conn = mysql.connector.connect(
@@ -35,8 +34,7 @@ def signup():
         if conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO usuarios (nombre_usuario, contrasena) VALUES (%s, %s)",
-                (nombre_usuario, hashed_password)
+                "INSERT INTO usuarios (nombre_usuario, contrasena) VALUES (nombre_usuario, hashed_pasword)",
             )
             conn.commit()
             cursor.close()
@@ -47,31 +45,27 @@ def signup():
         print(f"Error durante el registro: {e}")
         return "Error en el registro", 500
 
-@app.route('/login', methods=['POST'])
+
+@app.route('/login', methods=['POST', 'GET'])
 def login():
-    nombre_usuario = request.form['usuario']
-    contrasena = request.form['password']
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        password = request.form['password']
 
-    try:
         conn = get_db_connection()
-        if conn:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute(
-                "SELECT * FROM usuarios WHERE nombre_usuario = %s", (nombre_usuario,)
-            )
-            user = cursor.fetchone()
-            cursor.close()
-            conn.close()
+        
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT password FROM usuarios WHERE usuario = %s", (usuario,))
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
 
-            if user and bcrypt.checkpw(contrasena.encode('utf-8'), user['contrasena'].encode('utf-8')):
-                print(f"Inicio de sesión exitoso para el usuario '{nombre_usuario}'.")
-                return redirect(url_for('index'))
-            else:
-                print("Inicio de sesión fallido: usuario o contraseña incorrectos.")
-                return "Usuario o contraseña incorrectos", 401
-    except Exception as e:
-        print(f"Error durante el inicio de sesión: {e}")
-        return "Error en el inicio de sesión", 500
+        if result and check_password_hash(result['password'], password):
+            return redirect(("main.html"))
+        else:
+            flash("Credenciales inválidas. Inténtalo de nuevo.")
+            return redirect(url_for('login'))
+    return render_template('main.html')
 
 if __name__ == '__main__':
     # Verificar la conexión antes de iniciar el servidor
