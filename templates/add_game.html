@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Juego</title>
+    
+    <!-- Fuente y Estilos -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/stylesAlex.css">
+    
+    <!-- Font Awesome para Íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <h1>Añadir Juego</h1>
+    </header>
+    <nav>
+        <a href="{{ url_for('main') }}">Inicio</a>
+        <a href="{{ url_for('played') }}">Jugados</a>
+        <a href="{{ url_for('favorites') }}">Favoritos</a>
+        <a href="{{ url_for('platinos') }}">Platinos</a>
+    </nav>    
+
+    <!-- Contenedor del Formulario -->
+    <div class="container">
+        <div class="form-card">
+            <h2><i class="fas fa-gamepad"></i> Nuevo Juego</h2>
+            <form id="game-form">
+                <label for="game-name">Nombre del Juego:</label>
+                <input type="text" id="game-name" name="game-name" required placeholder="Ej. The Legend of Zelda">
+                
+                <label for="game-image">Imagen del Juego (URL):</label>
+                <input type="text" id="game-image" name="game-image" required placeholder="Ej. https://imagen.com/ejemplo.jpg">
+
+                <button type="submit"><i class="fas fa-save"></i> Guardar Juego</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Mi Biblioteca de Juegos</p>
+    </footer>
+
+    <script src="/static/scriptAlex.js"></script>
+
+</body>
+</html>

@@ -14,6 +14,22 @@ def get_db_connection():
 @app.route('/main')
 def main():
     return render_template('main.html')
+    
+@app.route('/played')
+def played():
+    return render_template('played.html')
+
+@app.route('/favorites')
+def favorites():
+    return render_template('favorites.html')
+
+@app.route('/platinos')
+def platinos():
+    return render_template('platinos.html')
+
+@app.route('/add_game')
+def add_game():
+    return render_template('add_game.html')
 
 @app.route('/')
 def index():

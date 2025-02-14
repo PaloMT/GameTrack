@@ -1,0 +1,51 @@
+<!-- Archivo: played_games.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos Jugados</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/stylesAlex.css">
+</head>
+<body>
+
+    <header>
+        <h1>Juegos Jugados</h1>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('favorites') }}">Favoritos</a>
+        <a href="{{ url_for('platinos') }}">Platinos</a>
+    </nav>
+    
+    <div class="game-list" id="played-games">
+        <!-- Los juegos jugados se cargarán aquí dinámicamente -->
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Mi Biblioteca de Juegos</p>
+    </footer>
+
+    <script src="/static/scriptAlex.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const gameList = document.getElementById('played-games');
+            const games = JSON.parse(localStorage.getItem('games')) || [];
+            const playedGames = games.filter(game => game.played);
+
+            gameList.innerHTML = '';
+            playedGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.classList.add('game-card');
+                gameCard.innerHTML = `
+                    <img src="${game.image}" alt="${game.name}">
+                    <h3>${game.name}</h3>
+                `;
+                gameList.appendChild(gameCard);
+            });
+        });
+    </script>
+</body>
+</html>

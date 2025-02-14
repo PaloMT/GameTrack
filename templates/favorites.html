@@ -1,0 +1,52 @@
+<!-- Archivo: favorites.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos Favoritos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/stylesAlex.css">
+</head>
+<body>
+
+    <header>
+        <h1>Juegos Favoritos</h1>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('main') }}">Inicio</a>
+        <a href="{{ url_for('played') }}">Jugados</a>
+        <a href="{{ url_for('platinos') }}">Platinos</a>
+    </nav>
+    
+
+    <div class="game-list" id="favorite-games">
+        <!-- Los juegos favoritos se cargarán aquí dinámicamente -->
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Mi Biblioteca de Juegos</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const gameList = document.getElementById('favorite-games');
+            const games = JSON.parse(localStorage.getItem('games')) || [];
+            const favoriteGames = games.filter(game => game.favorite);
+
+            gameList.innerHTML = '';
+            favoriteGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.classList.add('game-card');
+                gameCard.innerHTML = `
+                    <img src="${game.image}" alt="${game.name}">
+                    <h3>${game.name}</h3>
+                `;
+                gameList.appendChild(gameCard);
+            });
+        });
+    </script>
+</body>
+</html>

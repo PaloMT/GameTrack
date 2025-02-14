@@ -1,95 +1,14 @@
 <!DOCTYPE html>
+<!-- Font Awesome para íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Biblioteca de Juegos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #2D3250;
-            color: #F6B17A;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: #424769;
-            padding: 20px;
-            text-align: center;
-        }
-
-        header h1 {
-            font-size: 2.5em;
-            margin: 0;
-        }
-
-        nav {
-            background-color: #7077A1;
-            padding: 10px;
-            text-align: center;
-        }
-
-        nav a {
-            color: #F6B17A;
-            text-decoration: none;
-            margin: 0 20px;
-            font-size: 1.2em;
-        }
-
-        nav a:hover {
-            text-decoration: underline;
-        }
-
-        .game-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .game-card {
-            background-color: #424769;
-            border-radius: 8px;
-            margin: 10px;
-            padding: 20px;
-            width: 200px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .game-card img {
-            max-width: 100%;
-            border-radius: 8px;
-        }
-
-        .game-card h3 {
-            font-size: 1.5em;
-            margin: 15px 0;
-        }
-
-        .game-card button {
-            background-color: #F6B17A;
-            color: #2D3250;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .game-card button:hover {
-            background-color: #7077A1;
-        }
-
-        footer {
-            background-color: #424769;
-            padding: 20px;
-            text-align: center;
-            color: #F6B17A;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/stylesAlex.css">
 </head>
 <body>
 
@@ -98,38 +17,25 @@
     </header>
 
     <nav>
-        <a href="#">Inicio</a>
-        <a href="#">Mis Juegos</a>
-        <a href="#">Favoritos</a>
-        <a href="#">Configuración</a>
+        <a href="{{ url_for('index') }}">Inicio</a>
+        <a href="{{ url_for('played') }}">Jugados</a>
+        <a href="{{ url_for('favorites') }}">Favoritos</a>
+        <a href="{{ url_for('platinos') }}">Platinos</a>
     </nav>
+    
 
     <div class="game-list">
-        <div class="game-card">
-            <img src="https://via.placeholder.com/200" alt="Juego 1">
-            <h3>Juego 1</h3>
-            <button>Marcar como Jugado</button>
-            <button>Agregar a Favoritos</button>
-        </div>
-
-        <div class="game-card">
-            <img src="https://via.placeholder.com/200" alt="Juego 2">
-            <h3>Juego 2</h3>
-            <button>Marcar como Jugado</button>
-            <button>Agregar a Favoritos</button>
-        </div>
-
-        <div class="game-card">
-            <img src="https://via.placeholder.com/200" alt="Juego 3">
-            <h3>Juego 3</h3>
-            <button>Marcar como Jugado</button>
-            <button>Agregar a Favoritos</button>
-        </div>
+        <!-- Los juegos se agregarán aquí dinámicamente -->
     </div>
+
+    <!-- Botón flotante para añadir un juego -->
+    <button class="add-game-btn" onclick="window.location.href='add_game.html'">+</button>
 
     <footer>
         <p>&copy; 2025 Mi Biblioteca de Juegos</p>
     </footer>
+
+    <script src="/static/scriptAlex.js"></script>
 
 </body>
 </html>
