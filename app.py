@@ -1,23 +1,19 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 import mysql.connector
-import bcrypt
 import webbrowser
 
 app = Flask(__name__)
 
 def get_db_connection():
-    try:
-        conn = mysql.connector.connect(
+    return mysql.connector.connect(
             host="192.168.1.17",
             user="alumno",
             password="Informatica2023",
-            database="estudio_ccii_pa_g4"
-        )
-        print("Conexión a la base de datos establecida correctamente.")
-        return conn
-    except mysql.connector.Error as err:
-        print(f"Error de conexión a la base de datos: {err}")
-        return None
+            database="gametrack")
+
+@app.route('/main')
+def main():
+    return render_template('main.html')
 
 @app.route('/')
 def index():
@@ -26,46 +22,50 @@ def index():
 @app.route('/signup', methods=['POST'])
 def signup():
     nombre_usuario = request.form['nombre_usuario']
-    contrasena = request.form['contrasena']
-    hashed_password = bcrypt.hashpw(contrasena.encode('utf-8'), bcrypt.gensalt())
-
+    contrasena = request.form['contrasena']  # Nombre correcto del campo
     try:
         conn = get_db_connection()
-        if conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                "INSERT INTO usuarios (nombre_usuario, contrasena) VALUES (nombre_usuario, hashed_pasword)",
-            )
-            conn.commit()
-            cursor.close()
-            conn.close()
-            print(f"Usuario '{nombre_usuario}' registrado con éxito.")
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO usuarios (nombre_usuario, contrasena) VALUES (%s, %s)", 
+            (nombre_usuario, contrasena)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+        print(f"Usuario '{nombre_usuario}' registrado con éxito.")
         return redirect(url_for('index'))
     except Exception as e:
         print(f"Error durante el registro: {e}")
         return "Error en el registro", 500
 
-
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        usuario = request.form['usuario']
-        password = request.form['password']
+    try:
+        usuario = request.form.get('usuario')
+        contraseña = request.form.get('password')
+
+        if not usuario or not contraseña:
+            return "Faltan datos para iniciar sesión", 400
 
         conn = get_db_connection()
-        
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT password FROM usuarios WHERE usuario = %s", (usuario,))
-        result = cursor.fetchone()
+
+        # Ejecutar la consulta
+        cursor.execute(
+            "SELECT nombre_usuario FROM usuarios WHERE nombre_usuario = %s AND contrasena = %s", 
+            (usuario, contraseña)
+        )
+        usuario_db = cursor.fetchone()
+        cursor.fetchall()
         cursor.close()
         conn.close()
-
-        if result and check_password_hash(result['password'], password):
-            return redirect(("main.html"))
+        if usuario_db:
+            return redirect('main')
         else:
-            flash("Credenciales inválidas. Inténtalo de nuevo.")
-            return redirect(url_for('login'))
-    return render_template('main.html')
+            return "Usuario o contraseña incorrectos", 401
+    except Exception as e:
+        return f"Error en el inicio de sesión: {str(e)}", 400
 
 if __name__ == '__main__':
     # Verificar la conexión antes de iniciar el servidor
