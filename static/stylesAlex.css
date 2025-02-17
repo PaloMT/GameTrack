@@ -5,10 +5,13 @@ body {
     color: #F6B17A;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 header {
-    background-color: #424769;
+    background-color: #7077A1;
     padding: 20px;
     text-align: center;
 }
@@ -19,7 +22,7 @@ header h1 {
 }
 
 nav {
-    background-color: #7077A1;
+    background-color: #424769;
     padding: 10px;
     text-align: center;
 }
@@ -237,194 +240,4 @@ footer {
     .form-card {
         width: 90%;
     }
-}
-/* General */
-body {
-    font-family: 'Lora', serif;
-    background-color: #2D3250;
-    color: #F6B17A;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    background-color: #424769;
-    padding: 20px;
-    text-align: center;
-}
-
-header h1 {
-    font-size: 2.5em;
-    margin: 0;
-}
-
-nav {
-    background-color: #7077A1;
-    padding: 10px;
-    text-align: center;
-}
-
-nav a {
-    color: #F6B17A;
-    text-decoration: none;
-    margin: 0 20px;
-    font-size: 1.2em;
-}
-
-nav a:hover {
-    text-decoration: underline;
-}
-
-.game-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-}
-
-.game-card {
-    background-color: #424769;
-    border-radius: 8px;
-    margin: 10px;
-    padding: 20px;
-    width: 200px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
-}
-
-.game-card img {
-    max-width: 100%;
-    border-radius: 8px;
-}
-
-.game-card h3 {
-    font-size: 1.5em;
-    margin: 15px 0;
-}
-
-/* Estilos de los botones */
-.game-card button {
-    background-color: #7077A1;
-    color: #F6B17A;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    margin: 5px;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.game-card button.played:hover {
-    background-color: #A3D9A5;
-    color: #2D3250;
-}
-
-/* Contenedor de botones de acciones */
-.game-card .actions {
-    display: flex;
-    flex-direction: column; /* Asegura que los botones estén en columna */
-    justify-content: center;
-    align-items: center;
-    gap: 10px; /* Espacio entre los botones */
-    margin-top: 10px;
-}
-
-/* Agrupar botones de Favoritos y Trofeo en la parte superior */
-.game-card .top-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px; /* Espacio entre Favoritos y Trofeo */
-}
-
-/* Ajustar los botones dentro de top-actions */
-.game-card button.favorite,
-.game-card button.trophy {
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.game-card button.favorite i,
-.game-card button.trophy i {
-    font-size: 1.5em;
-    color: #FFFFFF;
-    transition: color 0.3s ease;
-}
-
-/* Estilo para el botón "Marcar como Jugado" */
-.game-card button.played {
-    background-color: #7077A1;
-    color: #F6B17A;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    margin: 5px;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Estilo para el botón de eliminación */
-.game-card .delete {
-    background-color: transparent;
-    color: #F6B17A;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5em;
-    transition: color 0.3s ease;
-    width: 100%;
-}
-
-/* Cambia el color del botón de eliminar al pasar el ratón */
-.game-card .delete:hover {
-    color: red;
-}
-/* Botón de Trofeo */
-.game-card button.trophy {
-    background-color: transparent; /* Fondo transparente */
-    color: #ffffff; /* Color de texto inicial */
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    margin: 0;
-}
-
-.game-card button.trophy i {
-    font-size: 1.5em;
-    color: #FFFFFF; /* Color inicial de la estrella */
-    transition: color 0.3s ease;
-}
-
-.game-card button.trophy.clicked i {
-    color: #FFD700; /* Color dorado al hacer clic */
-}
-
-.game-card button.trophy:hover {
-    color: #FFFFFF; /* Cambio a blanco en hover */
-}
-
-/* Estilo para los botones cuando no están clicados (incluido el trofeo) */
-.game-card button.favorite,
-.game-card button.trophy {
-    background-color: transparent; /* Fondo transparente */
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    padding: 0;
 }

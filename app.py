@@ -30,7 +30,7 @@ def platinos():
 @app.route('/add_game')
 def add_game():
     return render_template('add_game.html')
-
+    
 @app.route('/')
 def index():
     return render_template('index.html')
