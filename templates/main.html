@@ -23,16 +23,20 @@
         <a href="{{ url_for('platinos') }}">Platinos</a>
     </nav>
     
-
     <div class="game-list">
-        
-    </div>
+        {% for juego in juegos %}
+            <div class="game-card">
+                <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
+                <h3>{{ juego.nombre }}</h3>
+            </div>
+        {% endfor %}
+    </div>    
 
-    <button class="add-game-btn" id="addGameBtn">+</button>
+    <button class="add-game-btn" id="addGameBtn" data-url="{{ url_for('add_game') }}">+</button>
 
 <script>
     document.getElementById("addGameBtn").addEventListener("click", function() {
-        window.location.href = "{{ url_for('add_game') }}";
+        window.location.href = this.getAttribute("data-url");
     });
 </script>
 

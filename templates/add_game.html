@@ -26,13 +26,13 @@
     <div class="container">
         <div class="form-card">
             <h2><i class="fas fa-gamepad"></i> Nuevo Juego</h2>
-            <form id="game-form">
+            <form id="game-form" method="POST" action="{{ url_for('add_game') }}">
                 <label for="game-name">Nombre del Juego:</label>
                 <input type="text" id="game-name" name="game-name" required placeholder="Ej. The Legend of Zelda">
                 
                 <label for="game-image">Imagen del Juego (URL):</label>
                 <input type="text" id="game-image" name="game-image" required placeholder="Ej. https://imagen.com/ejemplo.jpg">
-
+            
                 <button type="submit"><i class="fas fa-save"></i> Guardar Juego</button>
             </form>
         </div>
