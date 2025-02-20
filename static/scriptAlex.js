@@ -64,23 +64,3 @@ function loadGames() {
         gameList.appendChild(gameCard);
     });
 }
-
-function updateLocalStorage(games, index, game) {
-    games[index] = game;
-    localStorage.setItem('games', JSON.stringify(games));
-}
-
-function saveGame(event) {
-    event.preventDefault();
-    const name = document.getElementById('game-name').value;
-    const image = document.getElementById('game-image').value;
-
-    const newGame = { name, image, favorite: false, played: false, trophy: false };
-    const games = JSON.parse(localStorage.getItem('games')) || [];
-    games.push(newGame);
-    localStorage.setItem('games', JSON.stringify(games));
-    window.location.href = 'index.html';
-}
-
-if (document.querySelector('.game-list')) loadGames();
-if (document.getElementById('game-form')) document.getElementById('game-form').addEventListener('submit', saveGame);

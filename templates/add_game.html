@@ -35,6 +35,11 @@
             
                 <button type="submit"><i class="fas fa-save"></i> Guardar Juego</button>
             </form>
+
+            <!-- Contenedor para la vista previa de la imagen -->
+            <div class="image-preview-container">
+                <img id="game-image-preview" style="max-width: 100%; margin-top: 10px;">
+            </div>
         </div>
     </div>
 
@@ -42,7 +47,19 @@
         <p>&copy; 2025 Mi Biblioteca de Juegos</p>
     </footer>
 
-    <script src="/static/scriptAlex.js"></script>
+    <script>
+        const imageInput = document.getElementById('game-image');
+        const imagePreview = document.getElementById('game-image-preview');
+
+        imageInput.addEventListener('input', function() {
+            const imageUrl = imageInput.value;
+            if (imageUrl) {
+                imagePreview.src = imageUrl;
+            } else {
+                imagePreview.src = '';
+            }
+        });
+    </script>
 
 </body>
 </html>
