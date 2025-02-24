@@ -1,0 +1,109 @@
+/* Estilos generales */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #fff;
+    text-align: center;
+}
+
+/* Encabezado */
+header {
+    background: rgba(26, 26, 46, 0.9);
+    padding: 20px;
+    font-size: 24px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    margin: 0;
+    color: #C0C0C0; /* Color platino */
+    text-shadow: 2px 2px 8px rgba(192, 192, 192, 0.5);
+}
+
+/* Navegación */
+nav {
+    margin: 20px 0;
+}
+
+nav a {
+    text-decoration: none;
+    color: #C0C0C0;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #00aaff;
+}
+
+/* Sección de logros */
+.achievements {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Tarjetas de trofeos */
+.trophy-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(192, 192, 192, 0.5);
+    border-radius: 12px;
+    padding: 15px;
+    margin: 15px;
+    width: 220px;
+    text-align: center;
+    box-shadow: 0 0 12px rgba(0, 170, 255, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trophy-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.8);
+}
+
+.trophy-card img {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.trophy-card h2 {
+    font-size: 18px;
+    margin: 5px 0;
+    color: #fff;
+}
+
+.trophy-card p {
+    font-size: 14px;
+    color: #aaa;
+}
+
+/* Botón de añadir platino */
+.add-trophy {
+    background: linear-gradient(135deg, #00aaff, #0077cc);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.add-trophy:hover {
+    background: linear-gradient(135deg, #0077cc, #0055aa);
+}
+
+/* Footer */
+footer {
+    margin-top: 30px;
+    padding: 10px;
+    background: rgba(26, 26, 46, 0.9);
+    font-size: 14px;
+    color: #aaa;
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platinos Conseguidos</title>
+    <link rel="stylesheet" href="/static/styles2.css">
+</head>
+<body>
+    <header>
+        <h1>🏆 Mis Trofeos de Platino</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Inicio</a>
+        <a href="played.html">Jugados</a>
+        <a href="favorites.html">Favoritos</a>
+    </nav>
+
+    <section class="achievements">
+        <div id="platinum-list">
+            <!-- Los platinos aparecerán aquí dinámicamente -->
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 - Colección de Trofeos de Platino</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const platinumList = document.getElementById('platinum-list');
+            const games = JSON.parse(localStorage.getItem('games')) || [];
+
+            // Filtramos solo los juegos con platino
+            const platinumGames = games.filter(game => game.platinum === true);
+
+            platinumList.innerHTML = '';
+
+            if (platinumGames.length === 0) {
+                platinumList.innerHTML = '<p>No tienes trofeos de platino aún. ¡Sigue jugando! 🎮</p>';
+            } else {
+                platinumGames.forEach(game => {
+                    const trophyCard = document.createElement('div');
+                    trophyCard.classList.add('trophy-card');
+                    trophyCard.innerHTML = `
+                        <h2>${game.name}</h2>
+                        <p><strong>Fecha del Platino:</strong> ${game.platinumDate}</p>
+                    `;
+                    platinumList.appendChild(trophyCard);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

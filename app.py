@@ -61,20 +61,26 @@ def add_game():
     if request.method == "POST":
         # Obtener los datos del formulario
         nombre_juego = request.form.get("game-name")
+        consola = request.form.get("game-console")
+        anio_salida = request.form.get("game-year")
         imagen_url = request.form.get("game-image")
+        comentarios = request.form.get("game-comments", "")  # Por defecto vacío si no hay comentarios
         usuario_id = session["usuario_id"]  # Obtener el usuario de la sesión
 
-        # Verificar que los datos no estén vacíos
-        if not nombre_juego or not imagen_url:
-            return "Faltan datos del juego", 400
+        # Verificar que los datos obligatorios no estén vacíos
+        if not nombre_juego or not imagen_url or not consola or not anio_salida:
+            return "Faltan datos obligatorios del juego", 400
 
         try:
             connection = get_db_connection()
             cursor = connection.cursor()
 
-            # Insertar el juego en la tabla "juegos"
-            query = "INSERT INTO juegos (nombre, imagen_del_juego) VALUES (%s, %s)"
-            cursor.execute(query, (nombre_juego, imagen_url))
+            # Insertar el juego en la tabla "juegos" con los nuevos campos
+            query = """
+                INSERT INTO juegos (nombre, consola, año_salida, imagen_del_juego, comentarios) 
+                VALUES (%s, %s, %s, %s, %s)
+            """
+            cursor.execute(query, (nombre_juego, consola, anio_salida, imagen_url, comentarios))
             juego_id = cursor.lastrowid  # Obtener el ID del juego recién insertado
 
             # Asociar el juego con el usuario en "usuarios_juegos"
@@ -90,6 +96,7 @@ def add_game():
             return f"Error en la base de datos: {err}"
 
     return render_template("add_game.html")
+
 
     
 @app.route('/')

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcar Platino</title>
+    <link rel="stylesheet" href="/static/styles2.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <header>
+        <h1>🎮 ¡Felicidades por el Platino!</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Inicio</a>
+        <a href="played.html">Jugados</a>
+        <a href="favorites.html">Favoritos</a>
+    </nav>
+
+    <section class="add-platinum">
+        <h2>¿Cuándo conseguiste el platino?</h2>
+        <form id="platinum-form">
+            <label for="platinum-date">Fecha del Platino:</label>
+            <input type="date" id="platinum-date" required>
+            <button type="submit">Guardar Fecha</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 - Colección de Trofeos de Platino</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+    <script>
+        document.getElementById('platinum-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const platinumDate = document.getElementById('platinum-date').value;
+            const games = JSON.parse(localStorage.getItem('games')) || [];
+            const gameId = new URLSearchParams(window.location.search).get('gameId');
+            const game = games[gameId];
+
+            game.platinum = true;
+            game.platinumDate = platinumDate; // Guardamos la fecha del platino
+
+            localStorage.setItem('games', JSON.stringify(games));
+
+            // Redirigir a la página de platinos
+            window.location.href = 'platinos.html';
+        });
+    </script>
+
+</body>
+</html>

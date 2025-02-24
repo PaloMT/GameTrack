@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Añadir Juego</title>
     
+    <!-- Fuente y Estilos -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/stylesAlex.css">
     
+    <!-- Font Awesome para Íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -15,6 +17,7 @@
     <header>
         <h1>Añadir Juego</h1>
     </header>
+    
     <nav>
         <a href="{{ url_for('main') }}">Inicio</a>
         <a href="{{ url_for('played') }}">Jugados</a>
@@ -30,9 +33,18 @@
                 <label for="game-name">Nombre del Juego:</label>
                 <input type="text" id="game-name" name="game-name" required placeholder="Ej. The Legend of Zelda">
                 
+                <label for="game-console">Consola:</label>
+                <input type="text" id="game-console" name="game-console" required placeholder="Ej. Nintendo Switch">
+
+                <label for="game-year">Año del juego:</label>
+                <input type="number" id="game-year" name="game-year" required placeholder="Ej. 2017">
+
+                <label for="game-comments">Comentarios extra:</label>
+                <textarea id="game-comments" name="game-comments" placeholder="Ej. Gran juego, lo recomiendo."></textarea>
+
                 <label for="game-image">Imagen del Juego (URL):</label>
                 <input type="text" id="game-image" name="game-image" required placeholder="Ej. https://imagen.com/ejemplo.jpg">
-            
+                
                 <button type="submit"><i class="fas fa-save"></i> Guardar Juego</button>
             </form>
 
@@ -42,10 +54,6 @@
             </div>
         </div>
     </div>
-
-    <footer>
-        <p>&copy; 2025 Mi Biblioteca de Juegos</p>
-    </footer>
 
     <script>
         const imageInput = document.getElementById('game-image');

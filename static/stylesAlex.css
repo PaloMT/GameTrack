@@ -2,33 +2,31 @@
 body {
     font-family: 'Lora', serif;
     background-color: #2D3250;
-    color: #F6B17A;
+    color: #fff;
     margin: 0;
     padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
 header {
-    background-color: #7077A1;
+    background-color: #424769;
     padding: 20px;
     text-align: center;
 }
 
 header h1 {
     font-size: 2.5em;
+    color:#d4c2b0;
     margin: 0;
 }
 
 nav {
-    background-color: #424769;
+    background-color: #565e92;
     padding: 10px;
     text-align: center;
 }
 
 nav a {
-    color: #F6B17A;
+    color: #d4c2b0;
     text-decoration: none;
     margin: 0 20px;
     font-size: 1.2em;
@@ -52,7 +50,7 @@ nav a:hover {
     padding: 20px;
     width: 200px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
 }
 
 .game-card img {
@@ -65,78 +63,111 @@ nav a:hover {
     margin: 15px 0;
 }
 
-/* Estilos de los botones */
+/* Botones generales */
 .game-card button {
-    background-color: #7077A1; /* Color inicial morado */
-    color: #F6B17A; /* Color inicial de texto */
+    background-color: transparent;
+    color: #ffffff;
     border: none;
     padding: 10px;
     border-radius: 5px;
     font-size: 1.2em;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    margin: 5px; /* Espaciado entre los botones */
-    width: 100%; /* Ajustamos el ancho */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para diferenciar */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 5px;
+    width: 100%;
+
 }
 
-/* Estilo para "Marcar como Jugado" */
 .game-card button.played {
-    background-color: #7077A1; /* Color inicial morado */
+    background-color: transparent;
+    color: white;
+    padding: 8px;
+    font-size: 1em;
+    border-radius: 8px;
+    border: 2px solid white !important;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .game-card button.played:hover {
-    background-color: #A3D9A5; /* Verde pálido en hover */
-    color: #2D3250; /* Cambiar texto a oscuro */
+    background-color: white;
+    color: #2D3250;
 }
 
-.game-card button.played:active {
-    color: #A3D9A5; /* Letras en el color del fondo al hacer clic */
+/* Contenedor de botones de acciones */
+.game-card .actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-/* Estilo para "Agregar a Favoritos" */
-.game-card button.favorite {
-    background-color: transparent; /* Hacer el fondo transparente */
-    color: transparent; /* Hacer el texto invisible */
-    border: none; /* Sin borde */
+.game-card .top-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Botón de Favoritos y Trofeo */
+.game-card button.favorite,
+.game-card button.trophy {
+    background-color: transparent;
+    border: none;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 40px;
     height: 40px;
     padding: 0;
-    margin-left: 10px; /* Espacio entre los botones */
+    cursor: pointer;
 }
 
-.game-card button.favorite i {
-    font-size: 1.5em; /* Tamaño de la estrella */
-    color: #FFFFFF; /* Estrella blanca al inicio */
+.game-card button.favorite i,
+.game-card button.trophy i {
+    font-size: 1.5em;
+    color: #FFFFFF;
     transition: color 0.3s ease;
 }
 
-/* Cambiar la estrella a dorada al hacer clic */
 .game-card button.favorite.clicked i {
-    color: #FFD700; /* Estrella dorada */
+    color: #FFD700;
 }
 
-.game-card button.favorite:hover {
-        color: #FFFFFF; /* Estrella blanca al inicio */
-        transition: color 0.3s ease;
-        pointer-events: auto; /* Permitir clics */
-    
-    
+.game-card button.trophy.clicked i {
+    color: rgb(184, 223, 255);
 }
 
-.game-card button.favorite:active {
-    background-color: transparent; /* Sin color de fondo al hacer clic */
+.game-card button.favorite:hover i {
+    color: #FFD700;
 }
 
-/* Estilo del botón flotante para añadir juegos */
+.game-card button.trophy:hover i {
+    color: rgb(184, 223, 255);
+}
+
+/* Botón de eliminación */
+.game-card .delete {
+    background-color: transparent;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    transition: color 0.3s ease;
+    width: 100%;
+}
+
+.game-card .delete:hover {
+    color: red;
+}
+
+/* Botón flotante para añadir juegos */
 .add-game-btn {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #F6B17A;
+    background-color: #d4c2b0;
     color: #2D3250;
     border: none;
     border-radius: 50%;
@@ -147,7 +178,6 @@ nav a:hover {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .add-game-btn:hover {
@@ -158,8 +188,9 @@ footer {
     background-color: #424769;
     padding: 20px;
     text-align: center;
-    color: #F6B17A;
+    color: #ffffff;
 }
+
 /* Contenedor principal centrado */
 .container {
     display: flex;
@@ -173,49 +204,53 @@ footer {
     background-color: #424769;
     padding: 25px;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     text-align: center;
     max-width: 400px;
     width: 100%;
 }
 
-/* Título dentro de la tarjeta */
 .form-card h2 {
-    color: #F6B17A;
+    color: #fff;
     margin-bottom: 20px;
 }
 
-/* Estilos de etiquetas */
 .form-card label {
     font-weight: bold;
-    color: #F6B17A;
+    color: #ffffff;
     display: block;
     margin: 10px 0 5px;
 }
 
-/* Campos de entrada */
-.form-card input {
+.form-card input,
+.form-card textarea {
     width: 100%;
     padding: 10px;
     border: none;
     border-radius: 5px;
     font-size: 1em;
-    background-color: #7077A1;
-    color: #F6B17A;
+    background-color: #565e92 ;
+    color: #ffffff;
     outline: none;
     transition: all 0.3s ease;
+    resize: vertical;
 }
-
-.form-card input::placeholder {
-    color: #d4c2b0;
-}
-
-.form-card input:focus {
-    background-color: #A3D9A5;
+.form-card input:hover,
+.form-card textarea:hover {
+    background-color: #6b77bb;
     color: #2D3250;
 }
 
-/* Botón de enviar */
+.form-card input::placeholder,
+.form-card textarea::placeholder {
+    color: #d4c2b0;
+}
+
+.form-card input:focus,
+.form-card textarea:focus {
+    background-color: #6b77bb ;
+    color: #ffffff;
+}
+
 .form-card button {
     width: 100%;
     padding: 12px;
@@ -224,20 +259,66 @@ footer {
     font-size: 1.2em;
     cursor: pointer;
     margin-top: 15px;
-    background-color: #F6B17A;
-    color: #2D3250;
+    background-color: transparent;
+    
+    color: #ffffff;
     font-weight: bold;
     transition: 0.3s ease;
 }
 
 .form-card button:hover {
-    background-color: #7077A1;
-    color: #F6B17A;
+    background-color: transparent;
+    color: #fff;
 }
 
-/* Estilo del botón en móviles */
+/* Responsive */
 @media (max-width: 480px) {
     .form-card {
         width: 90%;
     }
+}
+.hidden {
+    display: none;
+}
+
+.game-card {
+
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.game-image {
+    width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+/* Botón "Show More / Show Less" centrado y más estrecho */
+.game-card .toggle-details {
+    background-color: transparent !important;
+    color: white !important;
+    border: 2px solid white !important;
+    padding: 4px 15px !important; /* Más estrecho */
+    font-size: 0.8em !important;
+    border-radius: 15px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: block; /* Para centrar */
+    margin: 10px auto; /* Centrar horizontalmente */
+    width: fit-content; /* Ajustar ancho al contenido */
+    text-align: center;
+}
+
+.game-card .toggle-details:hover {
+    background-color: white !important;
+    color: #2D3250 !important;
+}
+.game-details p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
 }
