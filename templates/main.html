@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Biblioteca de Juegos</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/static/stylesAlex.css">
 </head>
 <body>
@@ -24,20 +23,28 @@
     
     <div class="game-list">
         {% for juego in juegos %}
-            <div class="game-card">
+            <div class="game-card" data-id="{{ juego.id }}">
                 <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
                 <h3>{{ juego.nombre }}</h3>
+                <div class="actions">
+                    <div class="top-actions">
+                        <button class="favorite" data-id="{{ juego.id }}"><i class="fas fa-star"></i></button>
+                        <button class="trophy" data-id="{{ juego.id }}"><i class="fas fa-trophy"></i></button>
+                    </div>
+                    <button class="played" data-id="{{ juego.id }}">Marcar como Jugado</button>
+                    <button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
+                </div>
             </div>
         {% endfor %}
     </div>    
 
     <button class="add-game-btn" id="addGameBtn" data-url="{{ url_for('add_game') }}">+</button>
 
-<script>
-    document.getElementById("addGameBtn").addEventListener("click", function() {
-        window.location.href = this.getAttribute("data-url");
-    });
-</script>
+    <script>
+        document.getElementById("addGameBtn").addEventListener("click", function() {
+            window.location.href = this.getAttribute("data-url");
+        });
+    </script>
 
     <footer>
         <p>&copy; 2025 Mi Biblioteca de Juegos</p>
