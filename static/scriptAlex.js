@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function loadGames() {
     const gameList = document.querySelector('.game-list');
-    gameList.innerHTML = '';  // Limpiar la lista de juegos
+    gameList.innerHTML = '';  // Limpiar la lista antes de agregar juegos
 
     fetch('/api/games')
         .then(response => response.json())
@@ -38,20 +38,25 @@ function loadGames() {
                 const trophyBtn = gameCard.querySelector('.trophy');
                 const deleteBtn = gameCard.querySelector('.delete');
 
-                // Función para cambiar color y mantenerlo al pasar el cursor
-                function setButtonStyle(button, color) {
-                    button.classList.add('clicked');
-                    button.style.backgroundColor = color;
-                    button.style.color = "#2D3250";  // Color de texto oscuro para contraste
-                    button.style.border = `2px solid ${color}`;
-
-                    button.addEventListener('mouseenter', () => {
+                // Función para marcar el botón con el color correspondiente
+                function setButtonStyle(button, color, active) {
+                    if (active) {
+                        button.classList.add('clicked');
                         button.style.backgroundColor = color;
-                    });
-                    button.addEventListener('mouseleave', () => {
-                        button.style.backgroundColor = color;
-                    });
+                        button.style.color = "#2D3250";  // Texto oscuro para contraste
+                        button.style.border = `2px solid ${color}`;
+                    } else {
+                        button.classList.remove('clicked');
+                        button.style.backgroundColor = "";
+                        button.style.color = "";
+                        button.style.border = "";
+                    }
                 }
+
+                // Marcar los botones según los valores en la base de datos
+                setButtonStyle(favoriteBtn, "#FFD700", game.favorito);
+                setButtonStyle(playedBtn, "#A3D9A5", game.jugado);
+                setButtonStyle(trophyBtn, "rgb(184, 223, 255)", game.platino);
 
                 // Botón de marcar como favorito
                 favoriteBtn.addEventListener('click', () => {
@@ -59,8 +64,8 @@ function loadGames() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                setButtonStyle(favoriteBtn, "#FFD700");  // Dorado
-                                alert("Juego agregado a favoritos");
+                                setButtonStyle(favoriteBtn, "#FFD700", !game.favorito);
+                                game.favorito = !game.favorito;  // Cambiar estado localmente
                             } else {
                                 console.error(data.error);
                             }
@@ -73,8 +78,8 @@ function loadGames() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                setButtonStyle(playedBtn, "#A3D9A5");  // Verde menta
-                                alert("Juego marcado como jugado");
+                                setButtonStyle(playedBtn, "#A3D9A5", !game.jugado);
+                                game.jugado = !game.jugado;
                             } else {
                                 console.error(data.error);
                             }
@@ -87,8 +92,8 @@ function loadGames() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                setButtonStyle(trophyBtn, "rgb(184, 223, 255)");  // Celeste
-                                alert("Juego marcado como platino");
+                                setButtonStyle(trophyBtn, "rgb(184, 223, 255)", !game.platino);
+                                game.platino = !game.platino;
                             } else {
                                 console.error(data.error);
                             }
@@ -115,36 +120,4 @@ function loadGames() {
             });
         })
         .catch(error => console.error("Error al cargar los juegos:", error));
-}
-
-// Actualizar el estado de un juego en la base de datos
-function updateGameStatus(gameId, field, value) {
-    fetch(`/api/games/${gameId}`, {
-        method: 'PATCH', 
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ [field]: value }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Juego actualizado:', data);
-    })
-    .catch(error => {
-        console.error('Error al actualizar el juego:', error);
-    });
-}
-
-// Eliminar un juego de la base de datos
-function deleteGame(gameId) {
-    fetch(`/api/games/${gameId}`, {
-        method: 'DELETE',
-    })
-    .then(response => response.json())
-    .then(() => {
-        loadGames(); // Volver a cargar los juegos después de eliminar uno
-    })
-    .catch(error => {
-        console.error('Error al eliminar el juego:', error);
-    });
 }

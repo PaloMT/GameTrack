@@ -24,7 +24,8 @@ def main():
         cursor = connection.cursor(dictionary=True)
 
         query = """
-            SELECT j.id, j.nombre, j.imagen_del_juego 
+            SELECT j.id, j.nombre, j.imagen_del_juego, 
+                   uj.favorito, uj.jugado, uj.platino
             FROM juegos j
             INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
             WHERE uj.usuario_id = %s
@@ -76,102 +77,98 @@ def api_games():
 
         return jsonify(juegos)  # Devuelve los juegos en formato JSON
     except mysql.connector.Error as err:
-        return jsonify({"error": f"Error en la base de datos: {err}"}), 500
+     return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
 @app.route('/api/mark_as_played/<int:juego_id>', methods=['POST'])
 def mark_as_played(juego_id):
-    """Marca un juego como jugado en la base de datos."""
-    if "usuario_id" not in session:
+    usuario_id = session.get("usuario_id")
+    if not usuario_id:
         return jsonify({"error": "Usuario no autenticado"}), 401
-
-    usuario_id = session["usuario_id"]
 
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        # Agregar el juego a la tabla de juegos jugados
-        query = "INSERT INTO juegos_jugados (usuario_id, juego_id) VALUES (%s, %s) ON DUPLICATE KEY UPDATE juego_id = juego_id"
-        cursor.execute(query, (usuario_id, juego_id))
-        connection.commit()
+        # Verificar si existe la relación entre el usuario y el juego
+        cursor.execute("SELECT jugado FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s", (usuario_id, juego_id))
+        resultado = cursor.fetchone()
 
+        if resultado is None:
+            # Si no existe la relación, insertamos un nuevo registro con 'jugado' = True
+            cursor.execute("INSERT INTO usuarios_juegos (usuario_id, juego_id, jugado) VALUES (%s, %s, %s)", (usuario_id, juego_id, True))
+            nuevo_estado = True
+        else:
+            # Si ya existe, alternamos el estado de 'jugado'
+            nuevo_estado = not resultado[0]
+            cursor.execute("UPDATE usuarios_juegos SET jugado = %s WHERE usuario_id = %s AND juego_id = %s", (nuevo_estado, usuario_id, juego_id))
+
+        connection.commit()
         cursor.close()
         connection.close()
-        return jsonify({"success": "Juego marcado como jugado"})
-    except mysql.connector.Error as err:
-        return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
-@app.route('/api/mark_as_platinum/<int:juego_id>', methods=['POST'])
-def mark_as_platinum(juego_id):
-    """Marca un juego como platino en la base de datos."""
-    if "usuario_id" not in session:
-        return jsonify({"error": "Usuario no autenticado"}), 401
-
-    usuario_id = session["usuario_id"]
-
-    try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
-
-        # Agregar el juego a la tabla de platinos
-        query = "INSERT INTO juegos_platinos (usuario_id, juego_id) VALUES (%s, %s) ON DUPLICATE KEY UPDATE juego_id = juego_id"
-        cursor.execute(query, (usuario_id, juego_id))
-        connection.commit()
-
-        cursor.close()
-        connection.close()
-        return jsonify({"success": "Juego agregado a platinos"})
+        return jsonify({'success': True, 'jugado': nuevo_estado})
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
 @app.route('/api/mark_as_favorite/<int:juego_id>', methods=['POST'])
 def mark_as_favorite(juego_id):
-    """Marca un juego como favorito en la base de datos."""
-    if "usuario_id" not in session:
+    usuario_id = session.get("usuario_id")
+    if not usuario_id:
         return jsonify({"error": "Usuario no autenticado"}), 401
-
-    usuario_id = session["usuario_id"]
 
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        # Agregar el juego a la tabla de favoritos
-        query = "INSERT INTO juegos_favoritos (usuario_id, juego_id) VALUES (%s, %s) ON DUPLICATE KEY UPDATE juego_id = juego_id"
-        cursor.execute(query, (usuario_id, juego_id))
-        connection.commit()
+        # Verificar si existe la relación entre el usuario y el juego
+        cursor.execute("SELECT favorito FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s", (usuario_id, juego_id))
+        resultado = cursor.fetchone()
 
+        if resultado is None:
+            # Si no existe la relación, insertamos un nuevo registro con 'favorito' = True
+            cursor.execute("INSERT INTO usuarios_juegos (usuario_id, juego_id, favorito) VALUES (%s, %s, %s)", (usuario_id, juego_id, True))
+            nuevo_estado = True
+        else:
+            # Si ya existe, alternamos el estado de 'favorito'
+            nuevo_estado = not resultado[0]
+            cursor.execute("UPDATE usuarios_juegos SET favorito = %s WHERE usuario_id = %s AND juego_id = %s", (nuevo_estado, usuario_id, juego_id))
+
+        connection.commit()
         cursor.close()
         connection.close()
-        return jsonify({"success": "Juego agregado a favoritos"})
+
+        return jsonify({'success': True, 'favorito': nuevo_estado})
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
-@app.route('/api/delete_game/<int:juego_id>', methods=['DELETE'])
-def delete_game(juego_id):
-    """Elimina un juego de la base de datos."""
-    if "usuario_id" not in session:
+@app.route('/api/mark_as_platinum/<int:juego_id>', methods=['POST'])
+def mark_as_platinum(juego_id):
+    usuario_id = session.get("usuario_id")
+    if not usuario_id:
         return jsonify({"error": "Usuario no autenticado"}), 401
-
-    usuario_id = session["usuario_id"]
 
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        # Primero, eliminarlo de la tabla de relación usuarios_juegos
-        query = "DELETE FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s"
-        cursor.execute(query, (usuario_id, juego_id))
+        # Verificar si existe la relación entre el usuario y el juego
+        cursor.execute("SELECT platino FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s", (usuario_id, juego_id))
+        resultado = cursor.fetchone()
 
-        # Luego, eliminar el juego si ya no está asociado a ningún usuario
-        query = "DELETE FROM juegos WHERE id = %s AND NOT EXISTS (SELECT 1 FROM usuarios_juegos WHERE juego_id = %s)"
-        cursor.execute(query, (juego_id, juego_id))
+        if resultado is None:
+            # Si no existe la relación, insertamos un nuevo registro con 'platino' = True
+            cursor.execute("INSERT INTO usuarios_juegos (usuario_id, juego_id, platino) VALUES (%s, %s, %s)", (usuario_id, juego_id, True))
+            nuevo_estado = True
+        else:
+            # Si ya existe, alternamos el estado de 'platino'
+            nuevo_estado = not resultado[0]
+            cursor.execute("UPDATE usuarios_juegos SET platino = %s WHERE usuario_id = %s AND juego_id = %s", (nuevo_estado, usuario_id, juego_id))
 
         connection.commit()
         cursor.close()
         connection.close()
 
-        return jsonify({"success": "Juego eliminado correctamente"})
+        return jsonify({'success': True, 'platino': nuevo_estado})
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 

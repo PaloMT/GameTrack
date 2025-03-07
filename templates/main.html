@@ -28,11 +28,17 @@
                 <h3>{{ juego.nombre }}</h3>
                 <div class="actions">
                     <div class="top-actions">
-                        <button class="favorite" data-id="{{ juego.id }}"><i class="fas fa-star"></i></button>
-                        <button class="trophy" data-id="{{ juego.id }}"><i class="fas fa-trophy"></i></button>
+                        <button class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <button class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            <i class="fas fa-trophy"></i>
+                        </button>
                     </div>
-                    <button class="played" data-id="{{ juego.id }}">Marcar como Jugado</button>
-                    <button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
+                    <button class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
+                        Marcar como Jugado
+                    </button>
+                    button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
         {% endfor %}
