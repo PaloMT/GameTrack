@@ -64,7 +64,7 @@ def api_games():
         cursor = connection.cursor(dictionary=True)
 
         query = """
-            SELECT j.id, j.nombre, j.imagen_del_juego
+            SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios
             FROM juegos j
             INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
             WHERE uj.usuario_id = %s
@@ -77,7 +77,34 @@ def api_games():
 
         return jsonify(juegos)  # Devuelve los juegos en formato JSON
     except mysql.connector.Error as err:
-     return jsonify({"error": f"Error en la base de datos: {err}"}), 500
+        return jsonify({"error": f"Error en la base de datos: {err}"}), 500
+   
+@app.route('/api/delete_game/<int:juego_id>', methods=['DELETE'])
+def delete_game(juego_id):
+    usuario_id = session.get("usuario_id")
+    if not usuario_id:
+        return jsonify({"error": "Usuario no autenticado"}), 401
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)  # Asegúrate de que el cursor devuelva diccionarios
+
+        # Eliminar la relación entre el usuario y el juego
+        cursor.execute("DELETE FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s", (usuario_id, juego_id))
+
+        # Eliminar el juego de la tabla "juegos" si no está asociado a ningún otro usuario
+        cursor.execute("SELECT COUNT(*) as count FROM usuarios_juegos WHERE juego_id = %s", (juego_id,))
+        result = cursor.fetchone()
+        if result['count'] == 0:
+            cursor.execute("DELETE FROM juegos WHERE id = %s", (juego_id,))
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        return jsonify({'success': True})
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
 @app.route('/api/mark_as_played/<int:juego_id>', methods=['POST'])
 def mark_as_played(juego_id):

@@ -26,6 +26,8 @@
             <div class="game-card" data-id="{{ juego.id }}">
                 <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
                 <h3>{{ juego.nombre }}</h3>
+                <p>Año de salida: {{ juego.año_salida }}</p>
+                <p>Comentarios: {{ juego.comentarios }}</p>
                 <div class="actions">
                     <div class="top-actions">
                         <button class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
@@ -38,7 +40,7 @@
                     <button class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
                         Marcar como Jugado
                     </button>
-                    button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
+                    <button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
         {% endfor %}

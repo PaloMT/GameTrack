@@ -78,7 +78,7 @@ nav a:hover {
 }
 
 .game-card button:hover {
-    color: #2D3250; /* Texto oscuro cuando se resalta */
+    color: #2D3250;
 }
 
 /* Botón Jugado */
@@ -98,6 +98,11 @@ nav a:hover {
     color: #2D3250; /* Texto oscuro cuando se resalta */
 }
 
+.game-card button.played.clicked {
+    background-color: #A3D9A5;
+    color: #2D3250;
+    border: 2px solid #A3D9A5;
+}
 
 /* Contenedor de botones de acciones */
 .game-card .actions {
@@ -150,23 +155,6 @@ nav a:hover {
 
 .game-card button.trophy:hover i {
     color: rgb(184, 223, 255); /* Celeste cuando se hace hover */
-}
-
-
-.game-card button.favorite.clicked i {
-    color: #FFD700;
-}
-
-.game-card button.trophy.clicked i {
-    color: rgb(184, 223, 255);
-}
-
-.game-card button.favorite:hover i {
-    color: #FFD700;
-}
-
-.game-card button.trophy:hover i {
-    color: rgb(184, 223, 255);
 }
 
 /* Botón de eliminación */

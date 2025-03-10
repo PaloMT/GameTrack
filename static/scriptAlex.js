@@ -16,6 +16,8 @@ function loadGames() {
                 return;
             }
 
+            console.log("Juegos obtenidos:", games);  // Agregar depuración
+
             games.forEach((game) => {
                 const gameCard = document.createElement('div');
                 gameCard.classList.add('game-card');
@@ -23,12 +25,14 @@ function loadGames() {
                 gameCard.innerHTML = `
                     <img src="${game.imagen_del_juego}" alt="${game.nombre}">
                     <h3>${game.nombre}</h3>
+                    <p>Año de salida: ${game.año_salida}</p>
+                    <p>Comentarios: ${game.comentarios}</p>
                     <div class="actions">
                         <div class="top-actions">
-                            <button class="favorite" data-id="${game.id}"><i class="fas fa-star"></i></button>
-                            <button class="trophy" data-id="${game.id}"><i class="fas fa-trophy"></i></button>
+                            <button class="favorite ${game.favorito ? 'clicked' : ''}" data-id="${game.id}"><i class="fas fa-star"></i></button>
+                            <button class="trophy ${game.platino ? 'clicked' : ''}" data-id="${game.id}"><i class="fas fa-trophy"></i></button>
                         </div>
-                        <button class="played" data-id="${game.id}">Marcar como Jugado</button>
+                        <button class="played ${game.jugado ? 'clicked' : ''}" data-id="${game.id}">Marcar como Jugado</button>
                         <button class="delete" data-id="${game.id}"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
