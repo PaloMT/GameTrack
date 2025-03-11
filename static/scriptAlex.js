@@ -70,6 +70,7 @@ function loadGames() {
                             if (data.success) {
                                 setButtonStyle(favoriteBtn, "#FFD700", !game.favorito);
                                 game.favorito = !game.favorito;  // Cambiar estado localmente
+                                updatePage('favorites');
                             } else {
                                 console.error(data.error);
                             }
@@ -84,6 +85,7 @@ function loadGames() {
                             if (data.success) {
                                 setButtonStyle(playedBtn, "#A3D9A5", !game.jugado);
                                 game.jugado = !game.jugado;
+                                updatePage('played');
                             } else {
                                 console.error(data.error);
                             }
@@ -98,6 +100,7 @@ function loadGames() {
                             if (data.success) {
                                 setButtonStyle(trophyBtn, "rgb(184, 223, 255)", !game.platino);
                                 game.platino = !game.platino;
+                                updatePage('platinos');
                             } else {
                                 console.error(data.error);
                             }
@@ -113,6 +116,7 @@ function loadGames() {
                                 if (data.success) {
                                     gameCard.remove(); // Eliminar visualmente el juego
                                     alert("Juego eliminado correctamente");
+                                    updatePage('all');
                                 } else {
                                     console.error(data.error);
                                 }
@@ -124,4 +128,16 @@ function loadGames() {
             });
         })
         .catch(error => console.error("Error al cargar los juegos:", error));
+}
+
+function updatePage(page) {
+    if (page === 'favorites') {
+        window.location.href = '/favorites';
+    } else if (page === 'played') {
+        window.location.href = '/played';
+    } else if (page === 'platinos') {
+        window.location.href = '/platinos';
+    } else {
+        loadGames();
+    }
 }

@@ -15,7 +15,7 @@ header {
 
 header h1 {
     font-size: 2.5em;
-    color:#d4c2b0;
+    color: #d4c2b0;
     margin: 0;
 }
 
@@ -132,29 +132,37 @@ nav a:hover {
     height: 40px;
     padding: 0;
     cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.game-card button.favorite i,
-.game-card button.trophy i {
-    font-size: 1.5em;
-    color: #d4c2b0; /* Color blanco suave para íconos */
-    transition: color 0.3s ease;
+.game-card button.favorite.clicked,
+.game-card button.trophy.clicked {
+    background-color: #FFD700; /* Dorado cuando se hace clic */
+    color: #2D3250;
+    border: 2px solid #FFD700;
 }
 
-.game-card button.favorite.clicked i {
-    color: #FFD700; /* Dorado cuando se hace clic */
-}
-
+.game-card button.favorite.clicked i,
 .game-card button.trophy.clicked i {
-    color: rgb(184, 223, 255); /* Celeste claro cuando se hace clic */
+    color: #2D3250; /* Texto oscuro cuando se hace clic */
+}
+
+.game-card button.favorite:hover {
+    background-color: #FFD700; /* Dorado cuando se hace hover */
+    color: #2D3250;
 }
 
 .game-card button.favorite:hover i {
-    color: #FFD700; /* Dorado cuando se hace hover */
+    color: #2D3250; /* Texto oscuro cuando se hace hover */
+}
+
+.game-card button.trophy:hover {
+    background-color: rgb(184, 223, 255); /* Azul claro cuando se hace hover */
+    color: #2D3250;
 }
 
 .game-card button.trophy:hover i {
-    color: rgb(184, 223, 255); /* Celeste cuando se hace hover */
+    color: #2D3250; /* Texto oscuro cuando se hace hover */
 }
 
 /* Botón de eliminación */
@@ -238,12 +246,13 @@ footer {
     border: none;
     border-radius: 5px;
     font-size: 1em;
-    background-color: #565e92 ;
+    background-color: #565e92;
     color: #ffffff;
     outline: none;
     transition: all 0.3s ease;
     resize: vertical;
 }
+
 .form-card input:hover,
 .form-card textarea:hover {
     background-color: #6b77bb;
@@ -257,7 +266,7 @@ footer {
 
 .form-card input:focus,
 .form-card textarea:focus {
-    background-color: #6b77bb ;
+    background-color: #6b77bb;
     color: #ffffff;
 }
 
@@ -270,7 +279,6 @@ footer {
     cursor: pointer;
     margin-top: 15px;
     background-color: transparent;
-    
     color: #ffffff;
     font-weight: bold;
     transition: 0.3s ease;
@@ -287,12 +295,12 @@ footer {
         width: 90%;
     }
 }
+
 .hidden {
     display: none;
 }
 
 .game-card {
-
     padding: 15px;
     margin: 10px;
     border-radius: 10px;
@@ -326,6 +334,7 @@ footer {
     background-color: white !important;
     color: #2D3250 !important;
 }
+
 .game-details p {
     word-wrap: break-word;
     overflow-wrap: break-word;

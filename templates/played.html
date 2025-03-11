@@ -33,15 +33,17 @@
         document.addEventListener("DOMContentLoaded", function() {
             const gameList = document.getElementById('played-games');
             const games = JSON.parse(localStorage.getItem('games')) || [];
-            const playedGames = games.filter(game => game.played);
+            const playedGames = games.filter(game => game.jugado);
 
             gameList.innerHTML = '';
             playedGames.forEach(game => {
                 const gameCard = document.createElement('div');
                 gameCard.classList.add('game-card');
                 gameCard.innerHTML = `
-                    <img src="${game.image}" alt="${game.name}">
-                    <h3>${game.name}</h3>
+                    <img src="${game.imagen_del_juego}" alt="${game.nombre}">
+                    <h3>${game.nombre}</h3>
+                    <p>Año de salida: ${game.año_salida}</p>
+                    <p>Comentarios: ${game.comentarios}</p>
                 `;
                 gameList.appendChild(gameCard);
             });
