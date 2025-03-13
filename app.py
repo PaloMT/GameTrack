@@ -114,26 +114,27 @@ def mark_as_played(juego_id):
 
     try:
         connection = get_db_connection()
-        cursor = connection.cursor()
+        cursor = connection.cursor(dictionary=True)
 
-        # Verificar si existe la relación entre el usuario y el juego
         cursor.execute("SELECT jugado FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s", (usuario_id, juego_id))
         resultado = cursor.fetchone()
 
         if resultado is None:
-            # Si no existe la relación, insertamos un nuevo registro con 'jugado' = True
             cursor.execute("INSERT INTO usuarios_juegos (usuario_id, juego_id, jugado) VALUES (%s, %s, %s)", (usuario_id, juego_id, True))
             nuevo_estado = True
         else:
-            # Si ya existe, alternamos el estado de 'jugado'
-            nuevo_estado = not resultado[0]
+            nuevo_estado = not resultado['jugado']
             cursor.execute("UPDATE usuarios_juegos SET jugado = %s WHERE usuario_id = %s AND juego_id = %s", (nuevo_estado, usuario_id, juego_id))
 
         connection.commit()
+
+        cursor.execute("SELECT * FROM juegos j INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id WHERE uj.usuario_id = %s AND j.id = %s", (usuario_id, juego_id))
+        juego = cursor.fetchone()
+
         cursor.close()
         connection.close()
 
-        return jsonify({'success': True, 'jugado': nuevo_estado})
+        return jsonify({'success': True, 'juego': juego})
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
@@ -145,26 +146,27 @@ def mark_as_favorite(juego_id):
 
     try:
         connection = get_db_connection()
-        cursor = connection.cursor()
+        cursor = connection.cursor(dictionary=True)
 
-        # Verificar si existe la relación entre el usuario y el juego
         cursor.execute("SELECT favorito FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s", (usuario_id, juego_id))
         resultado = cursor.fetchone()
 
         if resultado is None:
-            # Si no existe la relación, insertamos un nuevo registro con 'favorito' = True
             cursor.execute("INSERT INTO usuarios_juegos (usuario_id, juego_id, favorito) VALUES (%s, %s, %s)", (usuario_id, juego_id, True))
             nuevo_estado = True
         else:
-            # Si ya existe, alternamos el estado de 'favorito'
-            nuevo_estado = not resultado[0]
+            nuevo_estado = not resultado['favorito']
             cursor.execute("UPDATE usuarios_juegos SET favorito = %s WHERE usuario_id = %s AND juego_id = %s", (nuevo_estado, usuario_id, juego_id))
 
         connection.commit()
+
+        cursor.execute("SELECT * FROM juegos j INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id WHERE uj.usuario_id = %s AND j.id = %s", (usuario_id, juego_id))
+        juego = cursor.fetchone()
+
         cursor.close()
         connection.close()
 
-        return jsonify({'success': True, 'favorito': nuevo_estado})
+        return jsonify({'success': True, 'juego': juego})
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
@@ -176,26 +178,27 @@ def mark_as_platinum(juego_id):
 
     try:
         connection = get_db_connection()
-        cursor = connection.cursor()
+        cursor = connection.cursor(dictionary=True)
 
-        # Verificar si existe la relación entre el usuario y el juego
         cursor.execute("SELECT platino FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s", (usuario_id, juego_id))
         resultado = cursor.fetchone()
 
         if resultado is None:
-            # Si no existe la relación, insertamos un nuevo registro con 'platino' = True
             cursor.execute("INSERT INTO usuarios_juegos (usuario_id, juego_id, platino) VALUES (%s, %s, %s)", (usuario_id, juego_id, True))
             nuevo_estado = True
         else:
-            # Si ya existe, alternamos el estado de 'platino'
-            nuevo_estado = not resultado[0]
+            nuevo_estado = not resultado['platino']
             cursor.execute("UPDATE usuarios_juegos SET platino = %s WHERE usuario_id = %s AND juego_id = %s", (nuevo_estado, usuario_id, juego_id))
 
         connection.commit()
+
+        cursor.execute("SELECT * FROM juegos j INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id WHERE uj.usuario_id = %s AND j.id = %s", (usuario_id, juego_id))
+        juego = cursor.fetchone()
+
         cursor.close()
         connection.close()
 
-        return jsonify({'success': True, 'platino': nuevo_estado})
+        return jsonify({'success': True, 'juego': juego})
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 

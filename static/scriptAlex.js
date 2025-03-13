@@ -68,8 +68,8 @@ function loadGames() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                setButtonStyle(favoriteBtn, "#FFD700", !game.favorito);
-                                game.favorito = !game.favorito;  // Cambiar estado localmente
+                                game = data.juego;
+                                setButtonStyle(favoriteBtn, "#FFD700", game.favorito);
                                 updatePage('favorites');
                             } else {
                                 console.error(data.error);
@@ -83,8 +83,8 @@ function loadGames() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                setButtonStyle(playedBtn, "#A3D9A5", !game.jugado);
-                                game.jugado = !game.jugado;
+                                game = data.juego;
+                                setButtonStyle(playedBtn, "#A3D9A5", game.jugado);
                                 updatePage('played');
                             } else {
                                 console.error(data.error);
@@ -98,8 +98,8 @@ function loadGames() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                setButtonStyle(trophyBtn, "rgb(184, 223, 255)", !game.platino);
-                                game.platino = !game.platino;
+                                game = data.juego;
+                                setButtonStyle(trophyBtn, "rgb(184, 223, 255)", game.platino);
                                 updatePage('platinos');
                             } else {
                                 console.error(data.error);
