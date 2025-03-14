@@ -42,15 +42,87 @@ def main():
 
 @app.route('/played')
 def played():
-    return render_template('played.html')
+    if "usuario_id" not in session:
+        return redirect(url_for("index"))
+
+    usuario_id = session["usuario_id"]
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+            SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
+                   uj.favorito, uj.jugado, uj.platino
+            FROM juegos j
+            INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
+            WHERE uj.usuario_id = %s AND uj.jugado = TRUE
+        """
+        cursor.execute(query, (usuario_id,))
+        juegos = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        return render_template('played.html', juegos=juegos)
+    except mysql.connector.Error as err:
+        return f"Error en la base de datos: {err}"
 
 @app.route('/favorites')
 def favorites():
-    return render_template('favorites.html')
+    if "usuario_id" not in session:
+        return redirect(url_for("index"))
+
+    usuario_id = session["usuario_id"]
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+            SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
+                   uj.favorito, uj.jugado, uj.platino
+            FROM juegos j
+            INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
+            WHERE uj.usuario_id = %s AND uj.favorito = TRUE
+        """
+        cursor.execute(query, (usuario_id,))
+        juegos = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        return render_template('favorites.html', juegos=juegos)
+    except mysql.connector.Error as err:
+        return f"Error en la base de datos: {err}"
 
 @app.route('/platinos')
 def platinos():
-    return render_template('platinos.html')
+    if "usuario_id" not in session:
+        return redirect(url_for("index"))
+
+    usuario_id = session["usuario_id"]
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+            SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
+                   uj.favorito, uj.jugado, uj.platino
+            FROM juegos j
+            INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
+            WHERE uj.usuario_id = %s AND uj.platino = TRUE
+        """
+        cursor.execute(query, (usuario_id,))
+        juegos = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        return render_template('platinos.html', juegos=juegos)
+    except mysql.connector.Error as err:
+        return f"Error en la base de datos: {err}"
 
 @app.route('/api/games', methods=['GET'])
 def api_games():

@@ -1,12 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
-    if (document.querySelector('.game-list')) {
-        loadGames();
-    }
+    loadGames();
 });
 
 function loadGames() {
     const gameList = document.querySelector('.game-list');
-    gameList.innerHTML = '';  // Limpiar la lista antes de agregar juegos
+    if (!gameList) {
+        return;
+    }
+
+    gameList.innerHTML = '';
 
     fetch('/api/games')
         .then(response => response.json())
@@ -16,11 +18,13 @@ function loadGames() {
                 return;
             }
 
-            console.log("Juegos obtenidos:", games);  // Agregar depuración
-
             games.forEach((game) => {
                 const gameCard = document.createElement('div');
                 gameCard.classList.add('game-card');
+
+                let favoriteClass = game.favorito ? 'clicked' : '';
+                let trophyClass = game.platino ? 'clicked' : '';
+                let playedClass = game.jugado ? 'clicked' : '';
 
                 gameCard.innerHTML = `
                     <img src="${game.imagen_del_juego}" alt="${game.nombre}">
@@ -29,10 +33,10 @@ function loadGames() {
                     <p>Comentarios: ${game.comentarios}</p>
                     <div class="actions">
                         <div class="top-actions">
-                            <button class="favorite ${game.favorito ? 'clicked' : ''}" data-id="${game.id}"><i class="fas fa-star"></i></button>
-                            <button class="trophy ${game.platino ? 'clicked' : ''}" data-id="${game.id}"><i class="fas fa-trophy"></i></button>
+                            <button class="favorite ${favoriteClass}" data-id="${game.id}"><i class="fas fa-star"></i></button>
+                            <button class="trophy ${trophyClass}" data-id="${game.id}"><i class="fas fa-trophy"></i></button>
                         </div>
-                        <button class="played ${game.jugado ? 'clicked' : ''}" data-id="${game.id}">Marcar como Jugado</button>
+                        <button class="played ${playedClass}" data-id="${game.id}">Marcar como Jugado</button>
                         <button class="delete" data-id="${game.id}"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
@@ -42,35 +46,19 @@ function loadGames() {
                 const trophyBtn = gameCard.querySelector('.trophy');
                 const deleteBtn = gameCard.querySelector('.delete');
 
-                // Función para marcar el botón con el color correspondiente
-                function setButtonStyle(button, color, active) {
-                    if (active) {
-                        button.classList.add('clicked');
-                        button.style.backgroundColor = color;
-                        button.style.color = "#2D3250";  // Texto oscuro para contraste
-                        button.style.border = `2px solid ${color}`;
-                    } else {
-                        button.classList.remove('clicked');
-                        button.style.backgroundColor = "";
-                        button.style.color = "";
-                        button.style.border = "";
-                    }
-                }
-
-                // Marcar los botones según los valores en la base de datos
-                setButtonStyle(favoriteBtn, "#FFD700", game.favorito);
-                setButtonStyle(playedBtn, "#A3D9A5", game.jugado);
-                setButtonStyle(trophyBtn, "rgb(184, 223, 255)", game.platino);
-
                 // Botón de marcar como favorito
                 favoriteBtn.addEventListener('click', () => {
                     fetch(`/api/mark_as_favorite/${game.id}`, { method: 'POST' })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                game = data.juego;
-                                setButtonStyle(favoriteBtn, "#FFD700", game.favorito);
-                                updatePage('favorites');
+                                game.favorito = data.juego.favorito;
+                                if (game.favorito) {
+                                    favoriteBtn.classList.add('clicked');
+                                } else {
+                                    favoriteBtn.classList.remove('clicked');
+                                }
+                                updatePage();
                             } else {
                                 console.error(data.error);
                             }
@@ -83,9 +71,13 @@ function loadGames() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                game = data.juego;
-                                setButtonStyle(playedBtn, "#A3D9A5", game.jugado);
-                                updatePage('played');
+                                game.jugado = data.juego.jugado;
+                                if (game.jugado) {
+                                    playedBtn.classList.add('clicked');
+                                } else {
+                                    playedBtn.classList.remove('clicked');
+                                }
+                                updatePage();
                             } else {
                                 console.error(data.error);
                             }
@@ -98,9 +90,13 @@ function loadGames() {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                game = data.juego;
-                                setButtonStyle(trophyBtn, "rgb(184, 223, 255)", game.platino);
-                                updatePage('platinos');
+                                game.platino = data.juego.platino;
+                                if (game.platino) {
+                                    trophyBtn.classList.add('clicked');
+                                } else {
+                                    trophyBtn.classList.remove('clicked');
+                                }
+                                updatePage();
                             } else {
                                 console.error(data.error);
                             }
@@ -114,9 +110,9 @@ function loadGames() {
                             .then(response => response.json())
                             .then(data => {
                                 if (data.success) {
-                                    gameCard.remove(); // Eliminar visualmente el juego
+                                    gameCard.remove();
                                     alert("Juego eliminado correctamente");
-                                    updatePage('all');
+                                    updatePage();
                                 } else {
                                     console.error(data.error);
                                 }
@@ -126,18 +122,55 @@ function loadGames() {
 
                 gameList.appendChild(gameCard);
             });
+
+            // Aplicar estilos iniciales después de cargar los juegos
+            applyInitialButtonStyles();
         })
         .catch(error => console.error("Error al cargar los juegos:", error));
 }
 
-function updatePage(page) {
-    if (page === 'favorites') {
-        window.location.href = '/favorites';
-    } else if (page === 'played') {
-        window.location.href = '/played';
-    } else if (page === 'platinos') {
-        window.location.href = '/platinos';
-    } else {
-        loadGames();
-    }
+function updatePage() {
+    loadGames();
+}
+
+function applyInitialButtonStyles() {
+    const gameCards = document.querySelectorAll('.game-card');
+
+    gameCards.forEach(card => {
+        const favoriteBtn = card.querySelector('.favorite');
+        const playedBtn = card.querySelector('.played');
+        const trophyBtn = card.querySelector('.trophy');
+
+        if (favoriteBtn && favoriteBtn.classList.contains('clicked')) {
+            applyClickedStyle(favoriteBtn, "#FFD700");
+        } else if (favoriteBtn) {
+            removeClickedStyle(favoriteBtn);
+        }
+
+        if (playedBtn && playedBtn.classList.contains('clicked')) {
+            applyClickedStyle(playedBtn, "#A3D9A5");
+        } else if (playedBtn) {
+            removeClickedStyle(playedBtn);
+        }
+
+        if (trophyBtn && trophyBtn.classList.contains('clicked')) {
+            applyClickedStyle(trophyBtn, "rgb(184, 223, 255)");
+        } else if (trophyBtn) {
+            removeClickedStyle(trophyBtn);
+        }
+    });
+}
+
+function applyClickedStyle(button, color) {
+    button.classList.add('clicked');
+    button.style.backgroundColor = color;
+    button.style.color = "#2D3250";
+    button.style.border = `2px solid ${color}`;
+}
+
+function removeClickedStyle(button) {
+    button.classList.remove('clicked');
+    button.style.backgroundColor = "";
+    button.style.color = "";
+    button.style.border = "";
 }

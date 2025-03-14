@@ -72,13 +72,13 @@ nav a:hover {
     border-radius: 5px;
     font-size: 1.2em;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: color 0.3s ease; /* Changed to only color transition */
     margin: 5px;
     width: 100%;
 }
 
 .game-card button:hover {
-    color: #2D3250;
+    color: #ffffff; /* Hover color changed to white */
 }
 
 /* Botón Jugado */
@@ -90,7 +90,7 @@ nav a:hover {
     border-radius: 8px;
     border: 2px solid #d4c2b0; /* Borde color suave */
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: color 0.3s ease; /* Changed to only color transition */
 }
 
 .game-card button.played:hover {
@@ -132,14 +132,16 @@ nav a:hover {
     height: 40px;
     padding: 0;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: color 0.3s ease; /* Changed to only color transition */
+    color: #d4c2b0; /* Added default color */
 }
 
-.game-card button.favorite.clicked,
-.game-card button.trophy.clicked {
-    background-color: #FFD700; /* Dorado cuando se hace clic */
-    color: #2D3250;
-    border: 2px solid #FFD700;
+.game-card button.favorite.clicked {
+    color: #2D3250; /* Dorado cuando se hace clic */
+}
+
+.game-card button.trophy.clicked{
+    color: #2D3250; /* Azul claro cuando se hace clic */
 }
 
 .game-card button.favorite.clicked i,
@@ -148,8 +150,8 @@ nav a:hover {
 }
 
 .game-card button.favorite:hover {
-    background-color: #FFD700; /* Dorado cuando se hace hover */
-    color: #2D3250;
+    background-color: #2D3250;/* Dorado cuando se hace hover */
+    color: #FFD700;
 }
 
 .game-card button.favorite:hover i {
@@ -312,27 +314,6 @@ footer {
     height: auto;
     display: block;
     margin: 0 auto 10px;
-}
-
-/* Botón "Show More / Show Less" centrado y más estrecho */
-.game-card .toggle-details {
-    background-color: transparent !important;
-    color: white !important;
-    border: 2px solid white !important;
-    padding: 4px 15px !important; /* Más estrecho */
-    font-size: 0.8em !important;
-    border-radius: 15px !important;
-    cursor: pointer !important;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    display: block; /* Para centrar */
-    margin: 10px auto; /* Centrar horizontalmente */
-    width: fit-content; /* Ajustar ancho al contenido */
-    text-align: center;
-}
-
-.game-card .toggle-details:hover {
-    background-color: white !important;
-    color: #2D3250 !important;
 }
 
 .game-details p {

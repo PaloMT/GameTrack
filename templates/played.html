@@ -20,34 +20,36 @@
         <a href="{{ url_for('platinos') }}">Platinos</a>
     </nav>
     
-    <div class="game-list" id="played-games">
-        <!-- Los juegos jugados se cargarán aquí dinámicamente -->
+    <div id="played-list">
+        {% for juego in juegos %}
+            <div class="game-card" data-id="{{ juego.id }}">
+                <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
+                <h3>{{ juego.nombre }}</h3>
+                <p>Año de salida: {{ juego.año_salida }}</p>
+                <p>Comentarios: {{ juego.comentarios }}</p>
+                <div class="actions">
+                    <div class="top-actions">
+                        <button class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <button class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            <i class="fas fa-trophy"></i>
+                        </button>
+                    </div>
+                    <button class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
+                        Marcar como Jugado
+                    </button>
+                    <button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        {% endfor %}
     </div>
+
 
     <footer>
         <p>&copy; 2025 Mi Biblioteca de Juegos</p>
     </footer>
 
     <script src="/static/scriptAlex.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const gameList = document.getElementById('played-games');
-            const games = JSON.parse(localStorage.getItem('games')) || [];
-            const playedGames = games.filter(game => game.jugado);
-
-            gameList.innerHTML = '';
-            playedGames.forEach(game => {
-                const gameCard = document.createElement('div');
-                gameCard.classList.add('game-card');
-                gameCard.innerHTML = `
-                    <img src="${game.imagen_del_juego}" alt="${game.nombre}">
-                    <h3>${game.nombre}</h3>
-                    <p>Año de salida: ${game.año_salida}</p>
-                    <p>Comentarios: ${game.comentarios}</p>
-                `;
-                gameList.appendChild(gameCard);
-            });
-        });
-    </script>
 </body>
 </html>

@@ -19,7 +19,28 @@
     
     <section class="achievements">
         <div id="platinum-list">
-            <!-- Los platinos aparecerán aquí dinámicamente -->
+            {% for juego in juegos %}
+                <div class="game-card" data-id="{{ juego.id }}">
+                    <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
+                    <h3>{{ juego.nombre }}</h3>
+                    <p>Año de salida: {{ juego.año_salida }}</p>
+                    <p>Comentarios: {{ juego.comentarios }}</p>
+                    <div class="actions">
+                        <div class="top-actions">
+                            <button class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
+                                <i class="fas fa-trophy"></i>
+                            </button>
+                        </div>
+                        <button class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            Marcar como Jugado
+                        </button>
+                        <button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </section>
 
@@ -28,32 +49,5 @@
     </footer>
 
     <script src="/static/scriptAlex.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const platinumList = document.getElementById('platinum-list');
-
-            // Fetch para obtener los juegos con platino
-            fetch('/api/platino')  // Suponiendo que existe una ruta que devuelve los juegos con platino
-                .then(response => response.json())
-                .then(games => {
-                    platinumList.innerHTML = '';  // Limpiar la lista
-
-                    if (games.length === 0) {
-                        platinumList.innerHTML = '<p>No tienes trofeos de platino aún. ¡Sigue jugando! 🎮</p>';
-                    } else {
-                        games.forEach(game => {
-                            const trophyCard = document.createElement('div');
-                            trophyCard.classList.add('trophy-card');
-                            trophyCard.innerHTML = `
-                                <h2>${game.nombre}</h2>
-                                <p><strong>Fecha del Platino:</strong> ${game.platinumDate}</p>
-                            `;
-                            platinumList.appendChild(trophyCard);
-                        });
-                    }
-                })
-                .catch(error => console.error('Error al obtener los juegos de platino:', error));
-        });
-    </script>
 </body>
 </html>
