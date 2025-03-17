@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loadGames();
 });
 
+let games = []; // Store the games array in a global variable
+
 function loadGames() {
     const gameList = document.querySelector('.game-list');
     if (!gameList) {
@@ -12,165 +14,172 @@ function loadGames() {
 
     fetch('/api/games')
         .then(response => response.json())
-        .then(games => {
-            if (games.error) {
-                console.error("Error al obtener los juegos:", games.error);
+        .then(data => {
+            if (data.error) {
+                console.error("Error al obtener los juegos:", data.error);
                 return;
             }
 
+            games = data; // Store the games array
             games.forEach((game) => {
-                const gameCard = document.createElement('div');
-                gameCard.classList.add('game-card');
-
-                let favoriteClass = game.favorito ? 'clicked' : '';
-                let trophyClass = game.platino ? 'clicked' : '';
-                let playedClass = game.jugado ? 'clicked' : '';
-
-                gameCard.innerHTML = `
-                    <img src="${game.imagen_del_juego}" alt="${game.nombre}">
-                    <h3>${game.nombre}</h3>
-                    <p>Año de salida: ${game.año_salida}</p>
-                    <p>Comentarios: ${game.comentarios}</p>
-                    <div class="actions">
-                        <div class="top-actions">
-                            <button class="favorite ${favoriteClass}" data-id="${game.id}"><i class="fas fa-star"></i></button>
-                            <button class="trophy ${trophyClass}" data-id="${game.id}"><i class="fas fa-trophy"></i></button>
-                        </div>
-                        <button class="played ${playedClass}" data-id="${game.id}">Marcar como Jugado</button>
-                        <button class="delete" data-id="${game.id}"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-
-                const favoriteBtn = gameCard.querySelector('.favorite');
-                const playedBtn = gameCard.querySelector('.played');
-                const trophyBtn = gameCard.querySelector('.trophy');
-                const deleteBtn = gameCard.querySelector('.delete');
-
-                // Botón de marcar como favorito
-                favoriteBtn.addEventListener('click', () => {
-                    fetch(`/api/mark_as_favorite/${game.id}`, { method: 'POST' })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                game.favorito = data.juego.favorito;
-                                if (game.favorito) {
-                                    favoriteBtn.classList.add('clicked');
-                                } else {
-                                    favoriteBtn.classList.remove('clicked');
-                                }
-                                updatePage();
-                            } else {
-                                console.error(data.error);
-                            }
-                        });
-                });
-
-                // Botón de marcar como jugado
-                playedBtn.addEventListener('click', () => {
-                    fetch(`/api/mark_as_played/${game.id}`, { method: 'POST' })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                game.jugado = data.juego.jugado;
-                                if (game.jugado) {
-                                    playedBtn.classList.add('clicked');
-                                } else {
-                                    playedBtn.classList.remove('clicked');
-                                }
-                                updatePage();
-                            } else {
-                                console.error(data.error);
-                            }
-                        });
-                });
-
-                // Botón de marcar como platino
-                trophyBtn.addEventListener('click', () => {
-                    fetch(`/api/mark_as_platinum/${game.id}`, { method: 'POST' })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                game.platino = data.juego.platino;
-                                if (game.platino) {
-                                    trophyBtn.classList.add('clicked');
-                                } else {
-                                    trophyBtn.classList.remove('clicked');
-                                }
-                                updatePage();
-                            } else {
-                                console.error(data.error);
-                            }
-                        });
-                });
-
-                // Botón de eliminar juego
-                deleteBtn.addEventListener('click', () => {
-                    if (confirm("¿Estás seguro de que quieres eliminar este juego?")) {
-                        fetch(`/api/delete_game/${game.id}`, { method: 'DELETE' })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    gameCard.remove();
-                                    alert("Juego eliminado correctamente");
-                                    updatePage();
-                                } else {
-                                    console.error(data.error);
-                                }
-                            });
-                    }
-                });
-
+                const gameCard = createGameCard(game);
                 gameList.appendChild(gameCard);
             });
-
-            // Aplicar estilos iniciales después de cargar los juegos
-            applyInitialButtonStyles();
         })
         .catch(error => console.error("Error al cargar los juegos:", error));
 }
 
-function updatePage() {
-    loadGames();
-}
+function createGameCard(game) {
+    const gameCard = document.createElement('div');
+    gameCard.classList.add('game-card');
 
-function applyInitialButtonStyles() {
-    const gameCards = document.querySelectorAll('.game-card');
+    gameCard.innerHTML = `
+        <img src="${game.imagen_del_juego}" alt="${game.nombre}">
+        <h3>${game.nombre}</h3>
+        <p>Año de salida: ${game.año_salida}</p>
+        <p>Comentarios: ${game.comentarios}</p>
+        <div class="actions">
+            <div class="top-actions">
+                <button class="favorite" data-id="${game.id}"><i class="fas fa-star"></i></button>
+                <button class="trophy" data-id="${game.id}"><i class="fas fa-trophy"></i></button>
+            </div>
+            <button class="played" data-id="${game.id}">Marcar como Jugado</button>
+            <button class="delete" data-id="${game.id}"><i class="fas fa-trash"></i></button>
+        </div>
+    `;
 
-    gameCards.forEach(card => {
-        const favoriteBtn = card.querySelector('.favorite');
-        const playedBtn = card.querySelector('.played');
-        const trophyBtn = card.querySelector('.trophy');
+    const favoriteBtn = gameCard.querySelector('.favorite');
+    const playedBtn = gameCard.querySelector('.played');
+    const trophyBtn = gameCard.querySelector('.trophy');
+    const deleteBtn = gameCard.querySelector('.delete');
 
-        if (favoriteBtn && favoriteBtn.classList.contains('clicked')) {
-            applyClickedStyle(favoriteBtn, "#FFD700");
-        } else if (favoriteBtn) {
-            removeClickedStyle(favoriteBtn);
-        }
+    // Apply initial styles based on game data
+    updateFavoriteButton(favoriteBtn, game.favorito);
+    updatePlayedButton(playedBtn, game.jugado);
+    updateTrophyButton(trophyBtn, game.platino);
 
-        if (playedBtn && playedBtn.classList.contains('clicked')) {
-            applyClickedStyle(playedBtn, "#A3D9A5");
-        } else if (playedBtn) {
-            removeClickedStyle(playedBtn);
-        }
+    // Botón de marcar como favorito
+    favoriteBtn.addEventListener('click', () => {
+        fetch(`/api/mark_as_favorite/${game.id}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the game object in the games array
+                    const index = games.findIndex(g => g.id === game.id);
+                    if (index !== -1) {
+                        games[index].favorito = data.juego.favorito;
+                        updateFavoriteButton(favoriteBtn, data.juego.favorito);
+                    }
+                } else {
+                    console.error(data.error);
+                }
+            });
+    });
 
-        if (trophyBtn && trophyBtn.classList.contains('clicked')) {
-            applyClickedStyle(trophyBtn, "rgb(184, 223, 255)");
-        } else if (trophyBtn) {
-            removeClickedStyle(trophyBtn);
+    // Botón de marcar como jugado
+    playedBtn.addEventListener('click', () => {
+        fetch(`/api/mark_as_played/${game.id}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the game object in the games array
+                    const index = games.findIndex(g => g.id === game.id);
+                    if (index !== -1) {
+                        games[index].jugado = data.juego.jugado;
+                        updatePlayedButton(playedBtn, data.juego.jugado);
+                    }
+                } else {
+                    console.error(data.error);
+                }
+            });
+    });
+
+    // Botón de marcar como platino
+    trophyBtn.addEventListener('click', () => {
+        fetch(`/api/mark_as_platinum/${game.id}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the game object in the games array
+                    const index = games.findIndex(g => g.id === game.id);
+                    if (index !== -1) {
+                        games[index].platino = data.juego.platino;
+                        updateTrophyButton(trophyBtn, data.juego.platino);
+                    }
+                } else {
+                    console.error(data.error);
+                }
+            });
+    });
+
+    // Botón de eliminar juego
+    deleteBtn.addEventListener('click', () => {
+        if (confirm("¿Estás seguro de que quieres eliminar este juego?")) {
+            fetch(`/api/delete_game/${game.id}`, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the game card from the DOM
+                        gameCard.remove();
+                        // Remove the game from the games array
+                        const index = games.findIndex(g => g.id === game.id);
+                        if (index !== -1) {
+                            games.splice(index, 1);
+                        }
+                        alert("Juego eliminado correctamente");
+                        updatePage();
+                    } else {
+                        console.error(data.error);
+                    }
+                });
         }
     });
+
+    return gameCard;
 }
 
-function applyClickedStyle(button, color) {
-    button.classList.add('clicked');
-    button.style.backgroundColor = color;
-    button.style.color = "#2D3250";
-    button.style.border = `2px solid ${color}`;
+function updateFavoriteButton(button, isFavorite) {
+    if (isFavorite) {
+        button.classList.add('clicked');
+        button.style.backgroundColor = "#FFD700";
+        button.style.color = "#2D3250";
+        button.style.border = `2px solid #FFD700`;
+    } else {
+        button.classList.remove('clicked');
+        button.style.backgroundColor = "";
+        button.style.color = "";
+        button.style.border = "";
+    }
 }
 
-function removeClickedStyle(button) {
-    button.classList.remove('clicked');
-    button.style.backgroundColor = "";
-    button.style.color = "";
-    button.style.border = "";
+function updatePlayedButton(button, isPlayed) {
+    if (isPlayed) {
+        button.classList.add('clicked');
+        button.style.backgroundColor = "#A3D9A5";
+        button.style.color = "#2D3250";
+        button.style.border = `2px solid #A3D9A5`;
+    } else {
+        button.classList.remove('clicked');
+        button.style.backgroundColor = "";
+        button.style.color = "";
+        button.style.border = "";
+    }
+}
+
+function updateTrophyButton(button, isPlatinum) {
+    if (isPlatinum) {
+        button.classList.add('clicked');
+        button.style.backgroundColor = "rgb(184, 223, 255)";
+        button.style.color = "#2D3250";
+        button.style.border = `2px solid rgb(184, 223, 255)`;
+    } else {
+        button.classList.remove('clicked');
+        button.style.backgroundColor = "";
+        button.style.color = "";
+        button.style.border = "";
+    }
+}
+
+function updatePage() {
+    loadGames();
 }

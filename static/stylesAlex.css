@@ -150,7 +150,7 @@ nav a:hover {
 }
 
 .game-card button.favorite:hover {
-    background-color: #2D3250;/* Dorado cuando se hace hover */
+    background-color: #FFD700;/* Dorado cuando se hace hover */
     color: #FFD700;
 }
 
