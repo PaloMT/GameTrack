@@ -19,6 +19,7 @@
         <a href="{{ url_for('played') }}">Jugados</a>
         <a href="{{ url_for('favorites') }}">Favoritos</a>
         <a href="{{ url_for('platinos') }}">Platinos</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
     </nav>
     
     <div class="game-list">
@@ -27,7 +28,13 @@
                 <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
                 <h3>{{ juego.nombre }}</h3>
                 <p>Año de salida: {{ juego.año_salida }}</p>
-                <p>Comentarios: {{ juego.comentarios }}</p>
+                <div class="game-details">
+                    <p class="comments-short">{{ juego.comentarios }}</p>
+                    <p class="comments-full">{{ juego.comentarios }}</p>
+                    {% if juego.comentarios|length > 100 %}
+                        <button class="view-more-btn">Ver más</button>
+                    {% endif %}
+                </div>
                 <div class="actions">
                     <div class="top-actions">
                         <button class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
@@ -60,6 +67,12 @@
 
     <script>
         loadGames();
+    </script>
+
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
     </script>
 
     <script src="/static/scriptAlex.js"></script>

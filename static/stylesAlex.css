@@ -322,3 +322,43 @@ footer {
     white-space: normal;
     max-width: 100%;
 }
+
+/* Styles for expandable comments */
+.game-details .comments-short {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Show only 3 lines initially */
+    -webkit-box-orient: vertical;
+    line-height: 1.4em;
+    height: 4.2em; /* 3 lines * line-height */
+}
+
+.game-details .comments-full {
+    display: none;
+    line-height: 1.4em;
+}
+
+.game-details.expanded .comments-short {
+    display: none;
+}
+
+.game-details.expanded .comments-full {
+    display: block;
+}
+
+.view-more-btn {
+    background-color: transparent;
+    color: #d4c2b0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    margin-top: 5px;
+}
+
+.view-more-btn:hover {
+    color: #ffffff;
+}

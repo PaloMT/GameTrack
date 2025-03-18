@@ -382,6 +382,15 @@ def login():
     except Exception as e:
         return f"Error en el inicio de sesión: {str(e)}", 400
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    response = redirect(url_for('index'))
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
 if __name__ == '__main__':
     conn = get_db_connection()
     if conn:

@@ -16,43 +16,51 @@
         <a href="{{ url_for('main') }}">Inicio</a>
         <a href="{{ url_for('played') }}">Jugados</a>
         <a href="{{ url_for('favorites') }}">Favoritos</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
     </nav>
     
     <section class="achievements">
         <div id="platinum-list">
             {% for juego in juegos %}
                 <div class="game-card" data-id="{{ juego.id }}">
-                    <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
-                    <h3>{{ juego.nombre }}</h3>
-                    <p>Año de salida: {{ juego.año_salida }}</p>
-                    <p>Comentarios: {{ juego.comentarios }}</p>
-                    <div class="actions">
-                        <div class="top-actions">
-                            <button class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
-                                <i class="fas fa-star"></i>
-                            </button>
-                            <button class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
-                                <i class="fas fa-trophy"></i>
-                            </button>
-                        </div>
-                        <button class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
-                            Marcar como Jugado
-                        </button>
-                        <button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
-                    </div>
+                <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
+                <h3>{{ juego.nombre }}</h3>
+                <p>Año de salida: {{ juego.año_salida }}</p>
+                <div class="game-details">
+                    <p class="comments-short">{{ juego.comentarios }}</p>
+                    <p class="comments-full">{{ juego.comentarios }}</p>
+                    {% if juego.comentarios|length > 100 %}
+                        <button class="view-more-btn">Ver más</button>
+                    {% endif %}
                 </div>
-            {% endfor %}
-        </div>
+                <div class="actions">
+                    <div class="top-actions">
+                        <button class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <button class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            <i class="fas fa-trophy"></i>
+                        </button>
+                    </div>
+                    <button class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
+                        Marcar como Jugado
+                    </button>
+                    <button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>    
     </section>
 
     <footer>
         <p>&copy; 2025 - Colección de Trofeos de Platino</p>
     </footer>
 
-    <script>
-        loadGames();
-    </script>
-
     <script src="/static/scriptAlex.js"></script>
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
 </body>
 </html>
