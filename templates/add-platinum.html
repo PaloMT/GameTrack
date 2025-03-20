@@ -17,6 +17,7 @@
         <a href="index.html">Inicio</a>
         <a href="played.html">Jugados</a>
         <a href="favorites.html">Favoritos</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
     </nav>
 
     <section class="add-platinum">
@@ -50,6 +51,10 @@
             // Redirigir a la página de platinos
             window.location.href = 'platinos.html';
         });
+
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
     </script>
 
 </body>

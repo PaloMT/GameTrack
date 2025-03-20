@@ -65,37 +65,37 @@ nav a:hover {
 
 /* Botones generales */
 .game-card button {
-    background-color: transparent; /* Fondo transparente */
-    color: #d4c2b0; /* Color blanco suave para texto */
+    background-color: transparent;
+    color: #d4c2b0;
     border: none;
     padding: 10px;
     border-radius: 5px;
     font-size: 1.2em;
     cursor: pointer;
-    transition: color 0.3s ease; /* Changed to only color transition */
+    transition: color 0.3s ease;
     margin: 5px;
     width: 100%;
 }
 
 .game-card button:hover {
-    color: #ffffff; /* Hover color changed to white */
+    color: #ffffff;
 }
 
 /* Botón Jugado */
 .game-card button.played {
     background-color: transparent;
-    color: #d4c2b0; /* Color blanco suave */
+    color: #d4c2b0;
     padding: 8px;
     font-size: 1em;
     border-radius: 8px;
-    border: 2px solid #d4c2b0; /* Borde color suave */
+    border: 2px solid #d4c2b0;
     cursor: pointer;
-    transition: color 0.3s ease; /* Changed to only color transition */
+    transition: color 0.3s ease;
 }
 
 .game-card button.played:hover {
-    background-color: #d4c2b0; /* Fondo suave en hover */
-    color: #2D3250; /* Texto oscuro cuando se resalta */
+    background-color: #d4c2b0;
+    color: #2D3250;
 }
 
 .game-card button.played.clicked {
@@ -132,39 +132,39 @@ nav a:hover {
     height: 40px;
     padding: 0;
     cursor: pointer;
-    transition: color 0.3s ease; /* Changed to only color transition */
-    color: #d4c2b0; /* Added default color */
+    transition: color 0.3s ease;
+    color: #d4c2b0;
 }
 
 .game-card button.favorite.clicked {
-    color: #2D3250; /* Dorado cuando se hace clic */
+    color: #FFD700;
 }
 
-.game-card button.trophy.clicked{
-    color: #2D3250; /* Azul claro cuando se hace clic */
+.game-card button.trophy.clicked {
+    color: rgb(184, 223, 255);
 }
 
 .game-card button.favorite.clicked i,
 .game-card button.trophy.clicked i {
-    color: #2D3250; /* Texto oscuro cuando se hace clic */
+    color: #2D3250;
 }
 
 .game-card button.favorite:hover {
-    background-color: #FFD700;/* Dorado cuando se hace hover */
+    background-color: #FFD700;
     color: #FFD700;
 }
 
 .game-card button.favorite:hover i {
-    color: #2D3250; /* Texto oscuro cuando se hace hover */
+    color: #2D3250;
 }
 
 .game-card button.trophy:hover {
-    background-color: rgb(184, 223, 255); /* Azul claro cuando se hace hover */
+    background-color: rgb(184, 223, 255);
     color: #2D3250;
 }
 
 .game-card button.trophy:hover i {
-    color: #2D3250; /* Texto oscuro cuando se hace hover */
+    color: #2D3250;
 }
 
 /* Botón de eliminación */
@@ -302,13 +302,6 @@ footer {
     display: none;
 }
 
-.game-card {
-    padding: 15px;
-    margin: 10px;
-    border-radius: 10px;
-    text-align: center;
-}
-
 .game-image {
     width: 100px;
     height: auto;
@@ -328,10 +321,10 @@ footer {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Show only 3 lines initially */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     line-height: 1.4em;
-    height: 4.2em; /* 3 lines * line-height */
+    height: 4.2em;
 }
 
 .game-details .comments-full {
@@ -349,7 +342,7 @@ footer {
 
 .view-more-btn {
     background-color: transparent;
-    color: #d4c2b0;
+    color: #c4b1b1;
     border: none;
     padding: 5px 10px;
     border-radius: 5px;

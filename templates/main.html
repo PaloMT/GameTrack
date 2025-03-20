@@ -32,7 +32,7 @@
                     <p class="comments-short">{{ juego.comentarios }}</p>
                     <p class="comments-full">{{ juego.comentarios }}</p>
                     {% if juego.comentarios|length > 100 %}
-                        <button class="view-more-btn">Ver más</button>
+                        <button class="view-more-btn">▼</button>
                     {% endif %}
                 </div>
                 <div class="actions">
@@ -60,21 +60,20 @@
             window.location.href = this.getAttribute("data-url");
         });
     </script>
-
-    <footer>
-        <p>&copy; 2025 Mi Biblioteca de Juegos</p>
-    </footer>
-
     <script>
-        loadGames();
+        window.onload = function () {
+            if (document.querySelector('.game-list').children.length === 0) {
+                loadGames(); // Solo cargar si la lista está vacía
+            }
+        };
     </script>
-
+    <script src="/static/scriptAlex.js"></script>
+    
     <script>
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
+        if (!document.cookie.includes("usuario_id")) {
+            window.location.href = "/"; // Redirigir a la página de inicio
         }
     </script>
-
     <script src="/static/scriptAlex.js"></script>
 
 </body>

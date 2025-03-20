@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, session
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session, make_response
 import mysql.connector
 import webbrowser
 
 app = Flask(__name__)
-app.secret_key = "tu_clave_secreta"  # Necesaria para usar `session`
+app.secret_key = "tu_clave_secreta"
 
 def get_db_connection():
     return mysql.connector.connect(
@@ -14,8 +14,9 @@ def get_db_connection():
 
 @app.route('/main')
 def main():
-    if "usuario_id" not in session:
+    if "usuario_id" not in session:  # Verifica si hay sesión activa
         return redirect(url_for("index"))
+
 
     usuario_id = session["usuario_id"]
 
@@ -31,12 +32,12 @@ def main():
             WHERE uj.usuario_id = %s
         """
         cursor.execute(query, (usuario_id,))
-        juegos = cursor.fetchall()  # Guardamos los resultados en la variable juegos
+        juegos = cursor.fetchall()
 
         cursor.close()
         connection.close()
 
-        return render_template('main.html', juegos=juegos)  # Pasamos los juegos al template
+        return render_template('main.html', juegos=juegos)
     except mysql.connector.Error as err:
         return f"Error en la base de datos: {err}"
 
@@ -147,10 +148,10 @@ def api_games():
         cursor.close()
         connection.close()
 
-        return jsonify(juegos)  # Devuelve los juegos en formato JSON
+        return jsonify(juegos)
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
-   
+
 @app.route('/api/delete_game/<int:juego_id>', methods=['DELETE'])
 def delete_game(juego_id):
     usuario_id = session.get("usuario_id")
@@ -159,12 +160,10 @@ def delete_game(juego_id):
 
     try:
         connection = get_db_connection()
-        cursor = connection.cursor(dictionary=True)  # Asegúrate de que el cursor devuelva diccionarios
+        cursor = connection.cursor(dictionary=True)
 
-        # Eliminar la relación entre el usuario y el juego
         cursor.execute("DELETE FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s", (usuario_id, juego_id))
 
-        # Eliminar el juego de la tabla "juegos" si no está asociado a ningún otro usuario
         cursor.execute("SELECT COUNT(*) as count FROM usuarios_juegos WHERE juego_id = %s", (juego_id,))
         result = cursor.fetchone()
         if result['count'] == 0:
@@ -276,21 +275,17 @@ def mark_as_platinum(juego_id):
 
 @app.route("/add_game", methods=["GET", "POST"])
 def add_game():
-    if "usuario_id" not in session:  # Verificar si el usuario está autenticado
-        return redirect(url_for("index"))  # Redirigir si no ha iniciado sesión
-
-    print(f"usuario_id en sesión: {session.get('usuario_id')}")
+    if "usuario_id" not in session:
+        return redirect(url_for("index"))
 
     if request.method == "POST":
-        # Obtener los datos del formulario
         nombre_juego = request.form.get("game-name")
         consola = request.form.get("game-console")
         anio_salida = request.form.get("game-year")
         imagen_url = request.form.get("game-image")
-        comentarios = request.form.get("game-comments", "")  # Por defecto vacío si no hay comentarios
-        usuario_id = session["usuario_id"]  # Obtener el usuario de la sesión
+        comentarios = request.form.get("game-comments", "")
+        usuario_id = session["usuario_id"]
 
-        # Verificar que los datos obligatorios no estén vacíos
         if not nombre_juego or not imagen_url or not consola or not anio_salida:
             return "Faltan datos obligatorios del juego", 400
 
@@ -298,15 +293,13 @@ def add_game():
             connection = get_db_connection()
             cursor = connection.cursor()
 
-            # Insertar el juego en la tabla "juegos" con los nuevos campos
             query = """
                 INSERT INTO juegos (nombre, consola, año_salida, imagen_del_juego, comentarios) 
                 VALUES (%s, %s, %s, %s, %s)
             """
             cursor.execute(query, (nombre_juego, consola, anio_salida, imagen_url, comentarios))
-            juego_id = cursor.lastrowid  # Obtener el ID del juego recién insertado
+            juego_id = cursor.lastrowid
 
-            # Asociar el juego con el usuario en "usuarios_juegos"
             query = "INSERT INTO usuarios_juegos (usuario_id, juego_id) VALUES (%s, %s)"
             cursor.execute(query, (usuario_id, juego_id))
 
@@ -314,7 +307,7 @@ def add_game():
             cursor.close()
             connection.close()
 
-            return redirect(url_for("main"))  # Redirige a la página principal
+            return redirect(url_for("main"))
         except mysql.connector.Error as err:
             return f"Error en la base de datos: {err}"
 
@@ -327,7 +320,7 @@ def index():
 @app.route('/signup', methods=['POST'])
 def signup():
     nombre_usuario = request.form['nombre_usuario']
-    contrasena = request.form['contrasena']  # Nombre correcto del campo
+    contrasena = request.form['contrasena']
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -338,10 +331,8 @@ def signup():
         conn.commit()
         cursor.close()
         conn.close()
-        print(f"Usuario '{nombre_usuario}' registrado con éxito.")
         return redirect(url_for('index'))
     except Exception as e:
-        print(f"Error durante el registro: {e}")
         return "Error en el registro", 500
 
 @app.route('/login', methods=['POST'])
@@ -356,15 +347,13 @@ def login():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        # Ejecutar la consulta
         cursor.execute(
             "SELECT id, nombre_usuario FROM usuarios WHERE nombre_usuario = %s AND contrasena = %s",
             (usuario, contraseña)
         )
         usuario_db = cursor.fetchone()
 
-        # ⚠ Solución clave: Consumir todos los resultados para evitar "Unread result found"
-        cursor.fetchall()  # Esto asegura que no haya resultados pendientes en el cursor
+        cursor.fetchall()
 
         cursor.close()
         conn.close()
@@ -394,10 +383,7 @@ def logout():
 if __name__ == '__main__':
     conn = get_db_connection()
     if conn:
-        print("Conexión inicial verificada: Base de datos accesible.")
         conn.close()
-    else:
-        print("Conexión inicial fallida: Verifica la configuración de la base de datos.")
 
     chrome_path = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
     webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_path))

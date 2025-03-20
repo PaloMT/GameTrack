@@ -27,5 +27,11 @@
 				
 			</div>
 	</div>
+	<script>
+		window.history.replaceState(null, "", window.location.href);
+		window.onpopstate = function () {
+			window.history.replaceState(null, "", window.location.href);
+		};
+	  </script>	  
 </body>
 </html>

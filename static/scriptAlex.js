@@ -7,10 +7,14 @@ let games = [];
 function loadGames() {
     const gameList = document.querySelector('.game-list');
     if (!gameList) {
+        console.error("No se encontró el contenedor de juegos.");
         return;
     }
 
-    gameList.innerHTML = '';
+    if (gameList.children.length > 0) {
+        console.log("Los juegos ya están cargados, no se volverán a cargar.");
+        return; // Evita borrar juegos que ya existen
+    }
 
     fetch('/api/games')
         .then(response => response.json())
@@ -20,14 +24,22 @@ function loadGames() {
                 return;
             }
 
-            games = data; // Store the games array
-            games.forEach((game) => {
+            if (data.length === 0) {
+                console.warn("No hay juegos disponibles en la API.");
+                return;
+            }
+
+            gameList.innerHTML = ''; // Borrar solo si la API tiene datos nuevos
+
+            data.forEach((game) => {
                 const gameCard = createGameCard(game);
                 gameList.appendChild(gameCard);
             });
         })
         .catch(error => console.error("Error al cargar los juegos:", error));
 }
+
+
 
 function createGameCard(game) {
     const gameCard = document.createElement('div');
@@ -156,32 +168,52 @@ function createGameCard(game) {
 }
 
 function applyButtonStyles(button, isActive, buttonType) {
+    const icon = button.querySelector("i"); // Obtener el icono dentro del botón
+
     if (isActive) {
-        button.classList.add('clicked');
+        button.classList.add("clicked");
         switch (buttonType) {
-            case 'favorite':
+            case "favorite":
                 button.style.backgroundColor = "#FFD700";
-                button.style.color = "#2D3250";
-                button.style.border = `2px solid #FFD700`;
+                button.style.border = "2px solid #FFD700";
+                icon.style.color = "#2D3250"; // Asegurar color del icono
                 break;
-            case 'played':
-                button.style.backgroundColor = "#A3D9A5";
-                button.style.color = "#2D3250";
-                button.style.border = `2px solid #A3D9A5`;
-                break;
-            case 'trophy':
+            case "trophy":
                 button.style.backgroundColor = "rgb(184, 223, 255)";
-                button.style.color = "#2D3250";
-                button.style.border = `2px solid rgb(184, 223, 255)`;
+                button.style.border = "2px solid rgb(184, 223, 255)";
+                icon.style.color = "#2D3250";
                 break;
         }
     } else {
-        button.classList.remove('clicked');
+        button.classList.remove("clicked");
         button.style.backgroundColor = "";
-        button.style.color = "";
         button.style.border = "";
+        icon.style.color = ""; // Restaurar color original
     }
 }
+
+fetch('/api/games')
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error("Error al obtener los juegos:", data.error);
+            return;
+        }
+
+        games = data; // Guardar la lista de juegos
+
+        gameList.innerHTML = ''; // Limpiar la lista antes de actualizar
+
+        games.forEach((game) => {
+            const gameCard = createGameCard(game);
+            gameList.appendChild(gameCard);
+
+            // Aplicar estilos después de agregar la tarjeta
+            applyButtonStyles(gameCard.querySelector(".favorite"), game.favorito, "favorite");
+            applyButtonStyles(gameCard.querySelector(".trophy"), game.platino, "trophy");
+        });
+    })
+    .catch(error => console.error("Error al cargar los juegos:", error));
 
 function updatePage() {
     loadGames();
