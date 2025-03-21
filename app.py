@@ -16,21 +16,17 @@ def get_db_connection():
 def main():
     if "usuario_id" not in session:  # Verifica si hay sesión activa
         return redirect(url_for("index"))
-
-
     usuario_id = session["usuario_id"]
 
     try:
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
-        query = """
-            SELECT j.id, j.nombre, j.imagen_del_juego, 
+        query = """SELECT j.id, j.nombre, j.imagen_del_juego, 
                    uj.favorito, uj.jugado, uj.platino
             FROM juegos j
             INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
-            WHERE uj.usuario_id = %s
-        """
+            WHERE uj.usuario_id = %s"""
         cursor.execute(query, (usuario_id,))
         juegos = cursor.fetchall()
 
@@ -361,6 +357,7 @@ def login():
         if usuario_db:
             session['usuario_id'] = usuario_db['id']
             session['nombre_usuario'] = usuario_db['nombre_usuario']
+            print("Sesión iniciada:", session)  # <-- Agregar esto
             return redirect(url_for('main'))
         else:
             return "Usuario o contraseña incorrectos", 401

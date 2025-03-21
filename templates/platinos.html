@@ -58,9 +58,12 @@
 
     <script src="/static/scriptAlex.js"></script>
     <script>
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+            assignEventListeners(); // Asignar eventos después de cargar el DOM
+        });
     </script>
 </body>
 </html>
