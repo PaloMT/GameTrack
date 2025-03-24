@@ -22,7 +22,7 @@
     <section class="achievements">
         <div id="platinum-list">
             {% for juego in juegos %}
-                <div class="game-card" data-id="{{ juego.id }}">
+            <div class="game-card" data-id="{{ juego.id.platino }}">
                 <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
                 <h3>{{ juego.nombre }}</h3>
                 <p>Año de salida: {{ juego.año_salida }}</p>
@@ -35,17 +35,17 @@
                 </div>
                 <div class="actions">
                     <div class="top-actions">
-                        <button class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
+                        <button id="estrella" class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
                             <i class="fas fa-star"></i>
                         </button>
-                        <button class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
+                        <button id="trofeo" class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
                             <i class="fas fa-trophy"></i>
                         </button>
                     </div>
-                    <button class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
+                    <button id="jugado" class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
                         Marcar como Jugado
                     </button>
-                    <button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
+                    <button id="borrado" class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
         {% endfor %}

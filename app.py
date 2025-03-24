@@ -22,11 +22,11 @@ def main():
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
-        query = """SELECT j.id, j.nombre, j.imagen_del_juego, 
-                   uj.favorito, uj.jugado, uj.platino
-            FROM juegos j
-            INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
-            WHERE uj.usuario_id = %s"""
+        query = """SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
+                          uj.favorito, uj.jugado, uj.platino
+                   FROM juegos j
+                   INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
+                   WHERE uj.usuario_id = %s"""
         cursor.execute(query, (usuario_id,))
         juegos = cursor.fetchall()
 
@@ -304,7 +304,7 @@ def add_game():
             connection.close()
 
             return redirect(url_for("main"))
-        except mysql.connector.Error as err:
+        except mysql.connector.Error as errs:
             return f"Error en la base de datos: {err}"
 
     return render_template("add_game.html")
@@ -376,6 +376,36 @@ def logout():
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
     return response
+
+@app.route('/api/view_more_comments/<int:juego_id>', methods=['GET'])
+def view_more_comments(juego_id):
+    if "usuario_id" not in session:
+        return jsonify({"error": "Usuario no autenticado"}), 401
+
+    usuario_id = session["usuario_id"]
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+            SELECT comentarios
+            FROM juegos j
+            INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
+            WHERE uj.usuario_id = %s AND j.id = %s
+        """
+        cursor.execute(query, (usuario_id, juego_id))
+        juego = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+        if juego:
+            return jsonify({'success': True, 'comentarios': juego['comentarios']})
+        else:
+            return jsonify({'error': 'Juego no encontrado'}), 404
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
 if __name__ == '__main__':
     conn = get_db_connection()

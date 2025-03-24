@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadGames();
 });
 
-let games = [];
+let games = []; // Store the games array in a global variable
 
 function loadGames() {
     const gameList = document.querySelector('.game-list');
@@ -33,19 +33,34 @@ function createGameCard(game) {
     const gameCard = document.createElement('div');
     gameCard.classList.add('game-card');
 
-    gameCard.innerHTML = getGameCardHTML(game);
+    gameCard.innerHTML = `
+        <img src="${game.imagen_del_juego}" alt="${game.nombre}">
+        <h3>${game.nombre}</h3>
+        <p>Año de salida: ${game.año_salida}</p>
+        <div class="game-details">
+            <p class="comments-short">${game.comentarios.substring(0, 100)}...</p>
+            <p class="comments-full" style="display: none;">${game.comentarios}</p>
+            ${game.comentarios.length > 100 ? '<button class="view-more-btn">▼</button>' : ''}
+        </div>
+        <div class="actions">
+            <div class="top-actions">
+                <button class="favorite" data-id="${game.id}"><i class="fas fa-star"></i></button>
+                <button class="trophy" data-id="${game.id}"><i class="fas fa-trophy"></i></button>
+            </div>
+            <button class="played" data-id="${game.id}">Marcar como Jugado</button>
+            <button class="delete" data-id="${game.id}"><i class="fas fa-trash"></i></button>
+        </div>
+    `;
 
     const favoriteBtn = gameCard.querySelector('.favorite');
     const playedBtn = gameCard.querySelector('.played');
     const trophyBtn = gameCard.querySelector('.trophy');
     const deleteBtn = gameCard.querySelector('.delete');
-    const viewMoreBtn = gameCard.querySelector('.view-more-btn');
-    const gameDetails = gameCard.querySelector('.game-details');
 
     // Apply initial styles based on game data
-    applyButtonStyles(favoriteBtn, game.favorito, 'favorite');
-    applyButtonStyles(playedBtn, game.jugado, 'played');
-    applyButtonStyles(trophyBtn, game.platino, 'trophy');
+    updateFavoriteButton(favoriteBtn, game.favorito);
+    updatePlayedButton(playedBtn, game.jugado);
+    updateTrophyButton(trophyBtn, game.platino);
 
     // Botón de marcar como favorito
     favoriteBtn.addEventListener('click', () => {
@@ -57,26 +72,8 @@ function createGameCard(game) {
                     const index = games.findIndex(g => g.id === game.id);
                     if (index !== -1) {
                         games[index].favorito = data.juego.favorito;
-                        applyButtonStyles(favoriteBtn, data.juego.favorito, 'favorite');
+                        updateFavoriteButton(favoriteBtn, data.juego.favorito);
                     }
-                    updatePage();
-                } else {
-                    console.error(data.error);
-                }
-            });
-    });
-
-    // Botón de marcar como jugado
-    playedBtn.addEventListener('click', () => {
-        fetch(`/api/mark_as_played/${game.id}`, { method: 'POST' })
-                if (data.success) {
-                    // Update the game object in the games array
-                    const index = games.findIndex(g => g.id === game.id);
-                    if (index !== -1) {
-                        games[index].favorito = data.juego.favorito;
-                        applyButtonStyles(favoriteBtn, data.juego.favorito, 'favorite');
-                    }
-                    updatePage();
                 } else {
                     console.error(data.error);
                 }
@@ -93,9 +90,8 @@ function createGameCard(game) {
                     const index = games.findIndex(g => g.id === game.id);
                     if (index !== -1) {
                         games[index].jugado = data.juego.jugado;
-                        applyButtonStyles(playedBtn, data.juego.jugado, 'played');
+                        updatePlayedButton(playedBtn, data.juego.jugado);
                     }
-                    updatePage();
                 } else {
                     console.error(data.error);
                 }
@@ -112,9 +108,8 @@ function createGameCard(game) {
                     const index = games.findIndex(g => g.id === game.id);
                     if (index !== -1) {
                         games[index].platino = data.juego.platino;
-                        applyButtonStyles(trophyBtn, data.juego.platino, 'trophy');
+                        updateTrophyButton(trophyBtn, data.juego.platino);
                     }
-                    updatePage();
                 } else {
                     console.error(data.error);
                 }
@@ -144,37 +139,60 @@ function createGameCard(game) {
         }
     });
 
-    // Botón de ver más
+    const viewMoreBtn = gameCard.querySelector('.view-more-btn');
     if (viewMoreBtn) {
         viewMoreBtn.addEventListener('click', () => {
-            gameDetails.classList.toggle('expanded');
-            viewMoreBtn.textContent = gameDetails.classList.contains('expanded') ? 'Ver menos' : 'Ver más';
+            const commentsShort = gameCard.querySelector('.comments-short');
+            const commentsFull = gameCard.querySelector('.comments-full');
+            if (commentsFull.style.display === 'none') {
+                commentsFull.style.display = 'block';
+                commentsShort.style.display = 'none';
+                viewMoreBtn.textContent = '▲';
+            } else {
+                commentsFull.style.display = 'none';
+                commentsShort.style.display = 'block';
+                viewMoreBtn.textContent = '▼';
+            }
         });
     }
 
     return gameCard;
 }
 
-function applyButtonStyles(button, isActive, buttonType) {
-    if (isActive) {
+function updateFavoriteButton(button, isFavorite) {
+    if (isFavorite) {
         button.classList.add('clicked');
-        switch (buttonType) {
-            case 'favorite':
-                button.style.backgroundColor = "#FFD700";
-                button.style.color = "#2D3250";
-                button.style.border = `2px solid #FFD700`;
-                break;
-            case 'played':
-                button.style.backgroundColor = "#A3D9A5";
-                button.style.color = "#2D3250";
-                button.style.border = `2px solid #A3D9A5`;
-                break;
-            case 'trophy':
-                button.style.backgroundColor = "rgb(184, 223, 255)";
-                button.style.color = "#2D3250";
-                button.style.border = `2px solid rgb(184, 223, 255)`;
-                break;
-        }
+        button.style.backgroundColor = "#FFD700";
+        button.style.color = "#2D3250";
+        button.style.border = `2px solid #FFD700`;
+    } else {
+        button.classList.remove('clicked');
+        button.style.backgroundColor = "";
+        button.style.color = "";
+        button.style.border = "";
+    }
+}
+
+function updatePlayedButton(button, isPlayed) {
+    if (isPlayed) {
+        button.classList.add('clicked');
+        button.style.backgroundColor = "#A3D9A5";
+        button.style.color = "#2D3250";
+        button.style.border = `2px solid #A3D9A5`;
+    } else {
+        button.classList.remove('clicked');
+        button.style.backgroundColor = "";
+        button.style.color = "";
+        button.style.border = "";
+    }
+}
+
+function updateTrophyButton(button, isPlatinum) {
+    if (isPlatinum) {
+        button.classList.add('clicked');
+        button.style.backgroundColor = "rgb(184, 223, 255)";
+        button.style.color = "#2D3250";
+        button.style.border = `2px solid rgb(184, 223, 255)`;
     } else {
         button.classList.remove('clicked');
         button.style.backgroundColor = "";

@@ -29,25 +29,25 @@
                 <h3>{{ juego.nombre }}</h3>
                 <p>Año de salida: {{ juego.año_salida }}</p>
                 <div class="game-details">
-                    <p class="comments-short">{{ juego.comentarios }}</p>
-                    <p class="comments-full">{{ juego.comentarios }}</p>
+                    <p class="comments-short">{{ juego.comentarios[:100] }}...</p>
+                    <p class="comments-full" style="display: none;">{{ juego.comentarios }}</p>
                     {% if juego.comentarios|length > 100 %}
                         <button class="view-more-btn">▼</button>
                     {% endif %}
                 </div>
                 <div class="actions">
                     <div class="top-actions">
-                        <button class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
+                        <button id="estrella" class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
                             <i class="fas fa-star"></i>
                         </button>
-                        <button class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
+                        <button id="trofeo" class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
                             <i class="fas fa-trophy"></i>
                         </button>
                     </div>
-                    <button class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
+                    <button id="jugado" class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
                         Marcar como Jugado
                     </button>
-                    <button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
+                    <button id="borrado" class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
         {% endfor %}
@@ -60,11 +60,6 @@
             document.getElementById("addGameBtn").addEventListener("click", function() {
                 window.location.href = this.getAttribute("data-url");
             });
-
-            if (document.querySelector('.game-list').children.length === 0) {
-                loadGames(); // Solo cargar si la lista está vacía
-            }
-
             fetch('/api/games')
                 .then(response => response.json())
                 .then(data => {
