@@ -355,3 +355,12 @@ footer {
 .view-more-btn:hover {
     color: #ffffff;
 }
+
+.toggle-container {
+    position: absolute;
+    top: 20px; /* Ajusta la posición vertical */
+    right: 30px; /* Mueve más a la izquierda */
+    display: flex;
+    align-items: center; /* Alinea los elementos en el mismo eje Y */
+    z-index: 1000;
+}
