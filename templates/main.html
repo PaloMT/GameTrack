@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="/static/stylesAlex.css">
     <link rel="stylesheet" href="/static/toggle.css">
+</head>
+    
+<body>
+    <header>
+        <h1>Mi Biblioteca de Juegos</h1>
+    </header>
     <div class="toggle-container">
         <input type="checkbox" id="darkmode-toggle" />
         <label for="darkmode-toggle">
@@ -41,15 +47,6 @@
             </svg>
         </label>
     </div>
-
-    <div class="background"></div>
-</head>
-<body>
-
-    <header>
-        <h1>Mi Biblioteca de Juegos</h1>
-    </header>
-
     <nav>
         <a href="{{ url_for('main') }}">Inicio</a>
         <a href="{{ url_for('played') }}">Jugados</a>
