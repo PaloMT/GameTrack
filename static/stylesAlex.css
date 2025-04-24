@@ -1,11 +1,15 @@
 /* General */
 body {
     font-family: 'Lora', serif;
+    background-color: #2D3250;
+    color: #fff;
     margin: 0;
     padding: 0;
 }
 
 header {
+    width: 100%;
+    background-color: #424769;
     padding: 20px;
     text-align: center;
 }
@@ -17,11 +21,14 @@ header h1 {
 }
 
 nav {
+    width: 100%;
+    background-color: #565e92;
     padding: 10px;
     text-align: center;
 }
 
 nav a {
+    color: #d4c2b0;
     text-decoration: none;
     margin: 0 20px;
     font-size: 1.2em;
@@ -39,6 +46,7 @@ nav a:hover {
 }
 
 .game-card {
+    background-color: #424769;
     border-radius: 8px;
     margin: 10px;
     padding: 20px;
@@ -60,6 +68,7 @@ nav a:hover {
 /* Botones generales */
 .game-card button {
     background-color: transparent;
+    color: #d4c2b0;
     border: none;
     padding: 10px;
     border-radius: 5px;
@@ -68,6 +77,10 @@ nav a:hover {
     transition: color 0.3s ease;
     margin: 5px;
     width: 100%;
+}
+
+.game-card button:hover {
+    color: #ffffff;
 }
 
 /* Botón Jugado */
@@ -345,3 +358,11 @@ footer {
     color: #ffffff;
 }
 
+.toggle-container {
+    position: absolute;
+    top: 20px; /* Ajusta la posición vertical */
+    right: 30px; /* Mueve más a la izquierda */
+    display: flex;
+    align-items: center; /* Alinea los elementos en el mismo eje Y */
+    z-index: 1000;
+}

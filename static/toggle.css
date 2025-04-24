@@ -1,88 +1,150 @@
 :root {
-    /* Light Mode Colors */
-    --bg-light: #f5f5f5;
-    --header-light: #7e57c2;
-    --nav-light: #9575cd;
-    --card-light: #e6e0ff;
-    --text-light: #2d3250;
-    --accent-light: #d4c2b0;
-    
-    /* Dark Mode Colors */
-    --bg-dark: #1a1a2e;
-    --header-dark: #4a148c;
-    --nav-dark: #311b92;
-    --card-dark: #16213e;
-    --text-dark: #e2e2e2;
-    --accent-dark: #d1c4e9;
+	/* Light Mode Colors */
+	--bg-color: #f5f5f5;
+	--header-color: #7e57c2;
+	--nav-color: #9575cd;
+	--card-color: #e6e0ff;
+	--text-color: #000000;
+	--accent-color: #ffffff;
 }
 
-/* Dark Mode Class */
 body.dark-mode {
-    --bg-color: var(--bg-dark);
-    --header-color: var(--header-dark);
-    --nav-color: var(--nav-dark);
-    --card-color: var(--card-dark);
-    --text-color: var(--text-dark);
-    --accent-color: var(--accent-dark);
+	/* Dark Mode Colors */
+	--bg-color: #1a1a2e;
+	--header-color: #4a148c;
+	--nav-color: #311b92;
+	--card-color: #16213e;
+	--text-color: #ffffff;
+	--accent-color: #d1c4e9;
 }
 
-/* Toggle Styles */
+body {
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+}
+
+header {
+	background-color: var(--header-color);
+	color: var(--text-color);
+}
+
+nav {
+	background-color: var(--nav-color);
+	color: var(--text-color);
+}
+
+nav a {
+	color: var(--text-color);
+}
+
+.game-card {
+	background-color: var(--card-color);
+	color: var(--text-color);
+}
+
+button {
+	background-color: var(--accent-color);
+	color: var(--text-color);
+}
+
+button:hover {
+	background-color: var(--header-color);
+	color: var(--bg-color);
+}
+
 .toggle-container {
     position: absolute;
-    top: 50%;
-    right: 30px;
-    transform: translateY(-50%);
-    z-index: 100;
-}
-
-#darkmode-toggle {
-    display: none;
+    top: 29px;
+    right: 70px;
 }
 
 label {
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 60px;
-    height: 30px;
-    background: var(--header-color);
-    border-radius: 50px;
-    padding: 5px;
-    position: relative;
-    transition: background 0.3s;
+	width: 100px;
+	height: 50px;
+	position: relative;
+	display: block;
+	background: #ebebeb;
+	border-radius: 200px;
+	box-shadow: inset 0px 5px 15px rgba(0, 0, 0, 0.4),
+		inset 0px -5px 15px rgba(255, 255, 255, 0.4);
+	cursor: pointer;
+	transition: 0.3s;
+	&:after {
+		content: "";
+		width: 40px;
+		height: 40px;
+		position: absolute;
+		top: 1px;
+		left: 1px;
+		background: linear-gradient(180deg, #ffcc89, #d8860b);
+		border-radius: 180px;
+		box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+		transition: 0.3s;
+	}
+	svg {
+		position: absolute;
+		width: 30px;
+		top: 3px;
+		z-index: 100;
+		&.sun {
+			left: 2.5px;
+			fill: #fff;
+			transition: 1s;
+		}
+		&.moon {
+			left: 74.5px;
+			fill: #7e7e7e;
+			transition: 1s;
+		}
+	}
 }
 
-label svg {
-    width: 20px;
-    height: 20px;
-    transition: all 0.3s;
+input {
+	width: 0;
+	height: 0;
+	visibility: hidden;
+	&:checked + label {
+		background: #242424;
+		&:after {
+			left: auto; 
+			right: 1px; 
+			transform: none; 
+			background: linear-gradient(180deg, #777, #3a3a3a);
+		}
+		svg {
+			&.sun {
+				fill: #7e7e7e;
+			}
+			&.moon {
+				fill: #fff;
+			}
+		}
+		+ .background {
+			background: #242424;
+		}
+	}
+	&:active:after {
+		width: 40px;
+	}
 }
 
-.sun {
-    color: #ffc107;
+.background {
+	width: 100vw;
+	height: 100vh;
+	background: #fff;
+	z-index: -1;
+	position: absolute;
+	transition: 1s;
+	background-color: var(--bg-color);
 }
 
-.moon {
-    color: #f5f5f5;
-    transform: translateX(25px);
-}
-
-#darkmode-toggle:checked + label {
-    background: var(--header-color);
-}
-
-#darkmode-toggle:checked + label .sun {
-    transform: translateX(-25px);
-    opacity: 0;
-}
-
-#darkmode-toggle:checked + label .moon {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-/* Smooth transitions */
-body, header, nav, .game-card, button {
-    transition: background-color 0.5s ease, color 0.5s ease;
+input:checked + label + .background {
+	body {
+		class: dark-mode;
+	}
 }

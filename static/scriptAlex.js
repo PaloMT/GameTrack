@@ -204,34 +204,3 @@ function updateTrophyButton(button, isPlatinum) {
 function updatePage() {
     loadGames();
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    const toggle = document.getElementById('darkmode-toggle');
-    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    // Check local storage or system preference
-    if (localStorage.getItem('darkMode') === 'enabled' || 
-        (localStorage.getItem('darkMode') === null && prefersDarkScheme.matches)) {
-        toggle.checked = true;
-        document.body.classList.add('dark-mode');
-    }
-    
-    // Toggle dark mode
-    toggle.addEventListener('change', function() {
-        if (this.checked) {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('darkMode', 'enabled');
-        } else {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('darkMode', 'disabled');
-        }
-    });
-    
-    // Update colors when system preference changes
-    prefersDarkScheme.addEventListener('change', e => {
-        if (localStorage.getItem('darkMode') === null) {
-            toggle.checked = e.matches;
-            document.body.classList.toggle('dark-mode', e.matches);
-        }
-    });
-});
