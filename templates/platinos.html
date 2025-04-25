@@ -6,6 +6,7 @@
     <title>Platinos Conseguidos</title>
     <link rel="stylesheet" href="/static/stylesAlex.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/static/toggle.css">
 </head>
 <body>
     <header>
@@ -19,6 +20,14 @@
         <a href="{{ url_for('logout') }}">Cerrar sesión</a>
     </nav>
     
+    <div class="toggle-container">
+        <input type="checkbox" id="darkmode-toggle" />
+        <label for="darkmode-toggle">
+            <svg version="1.1" class="sun" xmlns="http://www.w3.org/2000/svg" ...></svg>
+            <svg version="1.1" class="moon" xmlns="http://www.w3.org/2000/svg" ...></svg>
+        </label>
+    </div>
+
     <section class="achievements">
         <div id="platinum-list">
             {% for juego in juegos %}
@@ -52,10 +61,6 @@
     </div>    
     </section>
 
-    <footer>
-        <p>&copy; 2025 - Colección de Trofeos de Platino</p>
-    </footer>
-
     <script src="/static/scriptAlex.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -63,6 +68,21 @@
                 window.history.replaceState(null, null, window.location.href);
             }
             assignEventListeners(); // Asignar eventos después de cargar el DOM
+
+            const toggle = document.getElementById("darkmode-toggle");
+            const body = document.body;
+
+            toggle.addEventListener("change", () => {
+                if (toggle.checked) {
+                    body.classList.add("dark-mode");
+                } else {
+                    body.classList.remove("dark-mode");
+                }
+            });
+
+            if (toggle.checked) {
+                body.classList.add("dark-mode");
+            }
         });
     </script>
 </body>

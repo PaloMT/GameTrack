@@ -99,11 +99,3 @@ nav a:hover {
     background: linear-gradient(135deg, #0077cc, #0055aa);
 }
 
-/* Footer */
-footer {
-    margin-top: 30px;
-    padding: 10px;
-    background: rgba(26, 26, 46, 0.9);
-    font-size: 14px;
-    color: #aaa;
-}

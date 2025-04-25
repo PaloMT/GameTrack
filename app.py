@@ -407,6 +407,10 @@ def view_more_comments(juego_id):
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template(url_for("404")), 404
+
 if __name__ == '__main__':
     conn = get_db_connection()
     if conn:

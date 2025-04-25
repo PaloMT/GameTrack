@@ -1,20 +1,20 @@
 :root {
 	/* Light Mode Colors */
-	--bg-color: #f5f5f5;
-	--header-color: #7e57c2;
-	--nav-color: #9575cd;
-	--card-color: #e6e0ff;
+	--bg-color: #e9d5b1;
+	--header-color: #d6bd8d;
+	--nav-color: #c4a474;
+	--card-color: #c7ac79;
 	--text-color: #000000;
-	--accent-color: #ffffff;
+	--accent-color: #000000;
 }
 
 body.dark-mode {
 	/* Dark Mode Colors */
-	--bg-color: #1a1a2e;
-	--header-color: #4a148c;
-	--nav-color: #311b92;
-	--card-color: #16213e;
-	--text-color: #ffffff;
+	--bg-color: #2D3250;
+	--header-color: #424769;
+	--nav-color: #565e92;
+	--card-color: #424769;
+	--text-color: #d1c4e9;
 	--accent-color: #d1c4e9;
 }
 
@@ -32,7 +32,9 @@ header {
 	background-color: var(--header-color);
 	color: var(--text-color);
 }
-
+header h1{
+	color: var(--text-color);
+}
 nav {
 	background-color: var(--nav-color);
 	color: var(--text-color);
