@@ -407,6 +407,31 @@ def view_more_comments(juego_id):
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
+@app.route('/delete_account', methods=['POST'])
+def delete_account():
+    if "usuario_id" not in session:
+        return jsonify({"error": "Usuario no autenticado"}), 401
+
+    usuario_id = session["usuario_id"]
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        # Delete user-related data from the database
+        cursor.execute("DELETE FROM usuarios_juegos WHERE usuario_id = %s", (usuario_id,))
+        cursor.execute("DELETE FROM usuarios WHERE id = %s", (usuario_id,))
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        # Clear the session and redirect to the home page
+        session.clear()
+        return jsonify({"success": True, "redirect_url": url_for('index')})
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Error en la base de datos: {err}"}), 500
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template(url_for("404")), 404

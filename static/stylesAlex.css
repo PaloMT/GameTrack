@@ -85,7 +85,7 @@ nav a:hover {
 /* Botón Jugado */
 .game-card button.played {
     background-color: transparent;
-    color: #d4c2b0;
+    color: var(--played-color);
     padding: 8px;
     font-size: 1em;
     border-radius: 8px;
@@ -95,8 +95,8 @@ nav a:hover {
 }
 
 .game-card button.played:hover {
-    background-color: #d4c2b0;
-    color: #2D3250;
+    background-color: var(--played-hover-bg);
+    color: var(--played-hover-text);
 }
 
 .game-card button.played.clicked {
@@ -134,44 +134,46 @@ nav a:hover {
     padding: 0;
     cursor: pointer;
     transition: color 0.3s ease;
-    color: #d4c2b0;
+    color: var(--icon-color);
 }
 
 .game-card button.favorite.clicked {
     color: #FFD700;
+    background-color: transparent;
 }
 
 .game-card button.trophy.clicked {
     color: rgb(184, 223, 255);
+    background-color: transparent;
 }
 
-.game-card button.favorite.clicked i,
+.game-card button.favorite.clicked i{
+    color: var(--icon-hover-color);
+    background-color: transparent;
+}
 .game-card button.trophy.clicked i {
-    color: #2D3250;
+    color: var(--icon-hover-color);
+    background-color: transparent;
 }
 
-.game-card button.favorite:hover {
-    background-color: #FFD700;
-    color: #FFD700;
+.game-card button.favorite:hover{
+    color: var(--icon-hover-color); /* Match the bin hover effect */
+    background-color: transparent; /* Ensure no background color */
 }
-
-.game-card button.favorite:hover i {
-    color: #2D3250;
-}
-
 .game-card button.trophy:hover {
-    background-color: rgb(184, 223, 255);
-    color: #2D3250;
+    color: var(--icon-hover-color); /* Match the bin hover effect */
+    background-color: transparent; /* Ensure no background color */
 }
 
-.game-card button.trophy:hover i {
-    color: #2D3250;
+.game-card button.favorite i,
+.game-card button.trophy i {
+    font-size: 1.5em; /* Increase the size of the icons */
 }
 
 /* Botón de eliminación */
 .game-card .delete {
     background-color: transparent;
-    color: #ffffff;
+    color: var(--delete-color);
     border: none;
     cursor: pointer;
     font-size: 1.5em;
@@ -180,7 +182,7 @@ nav a:hover {
 }
 
 .game-card .delete:hover {
-    color: red;
+    color: var(--delete-hover-color);
 }
 
 /* Botón flotante para añadir juegos */
@@ -357,4 +359,28 @@ nav a:hover {
     display: flex;
     align-items: center; /* Alinea los elementos en el mismo eje Y */
     z-index: 1000;
+}
+
+.delete-account-btn:hover {
+    background-color: #cc0000;
+}
+
+:root {
+    --icon-color: #d4c2b0; /* Default light mode color */
+    --icon-hover-color: #FFD700; /* Default hover color */
+    --delete-color: #ffffff; /* Default delete button color */
+    --delete-hover-color: red; /* Default delete hover color */
+    --played-color: #d4c2b0; /* Default played button color */
+    --played-hover-bg: #d4c2b0; /* Default played hover background */
+    --played-hover-text: #2D3250; /* Default played hover text */
+}
+
+body.dark-mode {
+    --icon-color: #d1c4e9; /* Dark mode color */
+    --icon-hover-color: rgb(184, 223, 255); /* Dark mode hover color */
+    --delete-color: #d1c4e9; /* Dark mode delete button color */
+    --delete-hover-color: red; /* Dark mode delete hover color */
+    --played-color: #d1c4e9; /* Dark mode played button color */
+    --played-hover-bg: #6b77bb; /* Dark mode played hover background */
+    --played-hover-text: #ffffff; /* Dark mode played hover text */
 }

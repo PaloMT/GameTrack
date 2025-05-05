@@ -76,6 +76,7 @@
         <a href="{{ url_for('favorites') }}">Favoritos</a>
         <a href="{{ url_for('platinos') }}">Platinos</a>
         <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+        <button id="deleteAccountBtn" class="delete-account-btn">Eliminar Cuenta</button>
     </nav>
     
     <div class="game-list">
@@ -124,6 +125,22 @@
                     }
                 })
                 .catch(error => console.error("Error al verificar sesión:", error));
+            
+            document.getElementById("deleteAccountBtn").addEventListener("click", function() {
+                if (confirm("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.")) {
+                    fetch("{{ url_for('delete_account') }}", { method: "POST" })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert("Cuenta eliminada con éxito.");
+                                window.location.href = data.redirect_url;
+                            } else {
+                                alert("Error al eliminar la cuenta: " + data.error);
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
+                }
+            });
         });
     </script>
 </body>
