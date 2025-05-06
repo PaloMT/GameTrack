@@ -52,10 +52,10 @@ function toggleFavorite(gameId, button) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                updateFavoriteButton(button, data.juego.favorito);
-                // Reload if on a filtered page (favorites, played, platinos)
-                if (window.location.pathname.includes('favorites') && !data.juego.favorito) {
-                    button.closest('.game-card').remove();
+                updateFavoriteButton(button, data.favorito);
+                const likeCountElement = document.getElementById(`like-count-${gameId}`);
+                if (likeCountElement) {
+                    likeCountElement.textContent = data.like_count; // Update the like count
                 }
             }
         });

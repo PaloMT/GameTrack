@@ -22,11 +22,16 @@ def main():
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
-        query = """SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
-                          uj.favorito, uj.jugado, uj.platino
-                   FROM juegos j
-                   INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
-                   WHERE uj.usuario_id = %s"""
+        query = """
+            SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
+                   uj.favorito, uj.jugado, uj.platino,
+                   (SELECT COUNT(*) FROM usuarios_juegos uj2 
+                    INNER JOIN juegos j2 ON uj2.juego_id = j2.id 
+                    WHERE j2.nombre = j.nombre AND uj2.favorito = TRUE) AS like_count
+            FROM juegos j
+            INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
+            WHERE uj.usuario_id = %s
+        """
         cursor.execute(query, (usuario_id,))
         juegos = cursor.fetchall()
 
@@ -50,7 +55,10 @@ def played():
 
         query = """
             SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
-                   uj.favorito, uj.jugado, uj.platino
+                   uj.favorito, uj.jugado, uj.platino,
+                   (SELECT COUNT(*) FROM usuarios_juegos uj2 
+                    INNER JOIN juegos j2 ON uj2.juego_id = j2.id 
+                    WHERE j2.nombre = j.nombre AND uj2.favorito = TRUE) AS like_count
             FROM juegos j
             INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
             WHERE uj.usuario_id = %s AND uj.jugado = TRUE
@@ -78,7 +86,10 @@ def favorites():
 
         query = """
             SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
-                   uj.favorito, uj.jugado, uj.platino
+                   uj.favorito, uj.jugado, uj.platino,
+                   (SELECT COUNT(*) FROM usuarios_juegos uj2 
+                    INNER JOIN juegos j2 ON uj2.juego_id = j2.id 
+                    WHERE j2.nombre = j.nombre AND uj2.favorito = TRUE) AS like_count
             FROM juegos j
             INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
             WHERE uj.usuario_id = %s AND uj.favorito = TRUE
@@ -106,7 +117,10 @@ def platinos():
 
         query = """
             SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
-                   uj.favorito, uj.jugado, uj.platino
+                   uj.favorito, uj.jugado, uj.platino,
+                   (SELECT COUNT(*) FROM usuarios_juegos uj2 
+                    INNER JOIN juegos j2 ON uj2.juego_id = j2.id 
+                    WHERE j2.nombre = j.nombre AND uj2.favorito = TRUE) AS like_count
             FROM juegos j
             INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
             WHERE uj.usuario_id = %s AND uj.platino = TRUE
@@ -133,7 +147,10 @@ def api_games():
         cursor = connection.cursor(dictionary=True)
 
         query = """
-            SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios
+            SELECT j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
+                   (SELECT COUNT(*) FROM usuarios_juegos uj2 
+                    INNER JOIN juegos j2 ON uj2.juego_id = j2.id 
+                    WHERE j2.nombre = j.nombre AND uj2.favorito = TRUE) AS like_count
             FROM juegos j
             INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
             WHERE uj.usuario_id = %s
@@ -215,6 +232,7 @@ def mark_as_favorite(juego_id):
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
+        # Toggle the favorite status
         cursor.execute("SELECT favorito FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s", (usuario_id, juego_id))
         resultado = cursor.fetchone()
 
@@ -227,13 +245,19 @@ def mark_as_favorite(juego_id):
 
         connection.commit()
 
-        cursor.execute("SELECT * FROM juegos j INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id WHERE uj.usuario_id = %s AND j.id = %s", (usuario_id, juego_id))
-        juego = cursor.fetchone()
+        # Get the updated like count for the game name
+        cursor.execute("""
+            SELECT COUNT(*) AS like_count
+            FROM usuarios_juegos uj
+            INNER JOIN juegos j ON uj.juego_id = j.id
+            WHERE j.nombre = (SELECT nombre FROM juegos WHERE id = %s) AND uj.favorito = TRUE
+        """, (juego_id,))
+        like_count = cursor.fetchone()['like_count']
 
         cursor.close()
         connection.close()
 
-        return jsonify({'success': True, 'juego': juego})
+        return jsonify({'success': True, 'favorito': nuevo_estado, 'like_count': like_count})
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 

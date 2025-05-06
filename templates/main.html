@@ -97,6 +97,7 @@
                         <button id="estrella" class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
                             <i class="fas fa-star"></i>
                         </button>
+                        <span class="like-count" id="like-count-{{ juego.id }}">{{ juego.like_count }}</span>
                         <button id="trofeo" class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
                             <i class="fas fa-trophy"></i>
                         </button>
