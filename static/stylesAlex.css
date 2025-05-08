@@ -99,13 +99,11 @@ nav a:hover {
 
 .game-card button.played.clicked {
     background-color: #A3D9A5;
-    color: #2D3250;
     border: 2px solid #A3D9A5;
 }
 
 .game-card button.played.clicked:hover {
     background-color: #A3D9A5; /* Ensure clicked background persists on hover */
-    color: #2D3250; /* Ensure clicked text color persists on hover */
     border: 2px solid #A3D9A5; /* Ensure clicked border persists on hover */
 }
 
@@ -150,13 +148,6 @@ nav a:hover {
     background-color: transparent;
 }
 
-.game-card button.favorite.clicked i{
-    background-color: transparent;
-}
-.game-card button.trophy.clicked i {
-    background-color: transparent;
-}
-
 .game-card button.favorite:hover{
     color: #FFD700; /* Match the bin hover effect */
     background-color: transparent; /* Ensure no background color */
@@ -171,11 +162,6 @@ nav a:hover {
     font-size: 1.5em;
 }
 
-.game-card button.favorite.clicked:hover,
-.game-card button.trophy.clicked:hover {
-    color: var(--icon-hover-color); /* Ensure clicked color persists on hover */
-    background-color: transparent; /* Prevent hover background from overriding */
-}
 
 .like-count {
     font-size: 0.9em;

@@ -49,15 +49,6 @@ nav a {
 	color: var(--text-color);
 }
 
-button {
-	background-color: var(--accent-color);
-	color: var(--text-color);
-}
-
-button:hover {
-	background-color: var(--header-color);
-	color: var(--bg-color);
-}
 
 .toggle-container {
     position: absolute;

@@ -158,7 +158,7 @@ function updateFavoriteButton(button, isFavorite) {
     if (isFavorite) {
         button.classList.add('clicked');
         button.style.backgroundColor = "transparent";
-        button.style.color = "#2D3250";
+        button.style.color = "#FFD700";
     } else {
         button.classList.remove('clicked');
         button.style.backgroundColor = "";
@@ -185,7 +185,7 @@ function updateTrophyButton(button, isPlatinum) {
     if (isPlatinum) {
         button.classList.add('clicked');
         button.style.backgroundColor = "transparent";
-        button.style.color = "#2D3250";
+        button.style.color = "rgb(184, 223, 255)";
     } else {
         button.classList.remove('clicked');
         button.style.backgroundColor = "";
