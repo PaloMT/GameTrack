@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupViewMoreButtons();
     setupAddGameButton();
     initializeButtonStates();
+    setupPlatinumList(); // Consolidate platinum list initialization here
 });
 
 function initializeButtons() {
@@ -41,7 +42,8 @@ function initializeButtons() {
             e.stopPropagation();
             const gameId = button.getAttribute('data-id');
             if (confirm("¿Estás seguro de que quieres eliminar este juego?")) {
-                deleteGame(gameId, button.closest('.game-card'));
+                const gameCard = button.closest('.game-card');
+                deleteGame(gameId, gameCard);
             }
         });
     });
@@ -58,7 +60,8 @@ function toggleFavorite(gameId, button) {
                     likeCountElement.textContent = data.like_count; // Update the like count
                 }
             }
-        });
+        })
+        .catch(error => console.error('Error toggling favorite:', error));
 }
 
 function togglePlayed(gameId, button) {
@@ -72,7 +75,8 @@ function togglePlayed(gameId, button) {
                     button.closest('.game-card').remove();
                 }
             }
-        });
+        })
+        .catch(error => console.error('Error toggling played status:', error));
 }
 
 function toggleTrophy(gameId, button) {
@@ -86,7 +90,8 @@ function toggleTrophy(gameId, button) {
                     button.closest('.game-card').remove();
                 }
             }
-        });
+        })
+        .catch(error => console.error('Error toggling trophy status:', error));
 }
 
 function deleteGame(gameId, gameCard) {
@@ -96,7 +101,8 @@ function deleteGame(gameId, gameCard) {
             if (data.success) {
                 gameCard.remove();
             }
-        });
+        })
+        .catch(error => console.error('Error deleting game:', error));
 }
 
 function setupViewMoreButtons() {
@@ -106,7 +112,7 @@ function setupViewMoreButtons() {
             const gameCard = button.closest('.game-card');
             const commentsShort = gameCard.querySelector('.comments-short');
             const commentsFull = gameCard.querySelector('.comments-full');
-            
+
             if (commentsFull.style.display === 'none' || !commentsFull.style.display) {
                 commentsFull.style.display = 'block';
                 commentsShort.style.display = 'none';
@@ -123,7 +129,7 @@ function setupViewMoreButtons() {
 function setupAddGameButton() {
     const addGameBtn = document.getElementById('addGameBtn');
     if (addGameBtn) {
-        addGameBtn.addEventListener('click', function() {
+        addGameBtn.addEventListener('click', function () {
             window.location.href = this.getAttribute('data-url');
         });
     }
@@ -133,7 +139,7 @@ function setupDarkModeToggle() {
     const toggle = document.getElementById('darkmode-toggle');
     if (toggle) {
         const body = document.body;
-        
+
         toggle.addEventListener('change', () => {
             if (toggle.checked) {
                 body.classList.add('dark-mode');
@@ -148,7 +154,6 @@ function setupDarkModeToggle() {
     }
 }
 
-// Button style update functions (keep these the same as before)
 function updateFavoriteButton(button, isFavorite) {
     if (isFavorite) {
         button.classList.add('clicked');
@@ -189,15 +194,6 @@ function updateTrophyButton(button, isPlatinum) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    initializeButtons();
-    setupDarkModeToggle();
-    setupViewMoreButtons();
-    setupAddGameButton();
-    initializeButtonStates(); // Add this line
-});
-
-// Add this new function
 function initializeButtonStates() {
     document.querySelectorAll('.favorite').forEach(button => {
         const isFavorite = button.classList.contains('clicked');
@@ -213,4 +209,34 @@ function initializeButtonStates() {
         const isPlatinum = button.classList.contains('clicked');
         updateTrophyButton(button, isPlatinum);
     });
+}
+
+function setupPlatinumList() {
+    const platinumList = document.getElementById('platinum-list');
+    const games = JSON.parse(localStorage.getItem('games')) || [];
+
+    if (!platinumList) return;
+
+    console.log(games); // Debugging stored games
+
+    const platinumGames = games.filter(game => game.platinum === true);
+
+    platinumList.innerHTML = '';
+
+    if (platinumGames.length === 0) {
+        platinumList.innerHTML = '<p>No tienes trofeos de platino aún. ¡Sigue jugando! 🎮</p>';
+    } else {
+        platinumGames.forEach(game => {
+            const trophyCard = document.createElement('div');
+            trophyCard.classList.add('trophy-card');
+            trophyCard.innerHTML = `
+                <img src="platinum.png" alt="Trofeo Platino">
+                <h2>${game.name}</h2>
+                <p><strong>Consola:</strong> ${game.console}</p>
+                <p><strong>Año:</strong> ${game.year}</p>
+                <p><strong>Fecha:</strong> ${game.date || 'Desconocida'}</p>
+            `;
+            platinumList.appendChild(trophyCard);
+        });
+    }
 }
