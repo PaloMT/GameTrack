@@ -240,3 +240,30 @@ function setupPlatinumList() {
         });
     }
 }
+
+function setupDarkModeToggle() {
+    const toggle = document.getElementById('darkmode-toggle');
+    const body = document.body;
+
+    // Check localStorage for the saved mode
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode === 'enabled') {
+        body.classList.add('dark-mode');
+        if (toggle) toggle.checked = true;
+    } else {
+        body.classList.remove('dark-mode');
+        if (toggle) toggle.checked = false;
+    }
+
+    if (toggle) {
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled'); // Save mode to localStorage
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled'); // Save mode to localStorage
+            }
+        });
+    }
+}

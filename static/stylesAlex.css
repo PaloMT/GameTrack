@@ -364,7 +364,3 @@ nav a:hover {
     align-items: center; /* Alinea los elementos en el mismo eje Y */
     z-index: 1000;
 }
-
-.delete-account-btn:hover {
-    background-color: #cc0000;
-}
