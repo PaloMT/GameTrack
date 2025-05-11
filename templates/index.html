@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Slide Navbar</title>
+	<link rel="stylesheet" type="text/css" href="/static/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div class="main">  	
+		<input type="checkbox" id="chk" aria-hidden="true">
+
+			<div class="signup">
+					<form action="/signup" method="POST">
+						<label for="chk" aria-hidden="true">Sign up</label>
+						<input type="text" id="usuario_nuevo" name="nombre_usuario" placeholder="Usuario" required="">
+						<input type="password" id="password_nueva" name="contrasena" placeholder="Contraseña" required="">
+						<button type="submit">Sign up</button>
+					</form>
+			</div>
+			<div class="login">
+				<form action="/login" method="POST">
+					<label for="chk" aria-hidden="true">Login</label>
+					<input type="text" id="usuario" name="usuario" placeholder="Usuario" required="">
+					<input type="password" id="password" name="password" placeholder="Contraseña" required="">
+					<button type="submit">Login</button>
+				</form>
+				
+			</div>
+	</div>
+	<script>
+		window.history.replaceState(null, "", window.location.href);
+		window.onpopstate = function () {
+			window.history.replaceState(null, "", window.location.href);
+		};
+	  </script>	  
+</body>
+</html>

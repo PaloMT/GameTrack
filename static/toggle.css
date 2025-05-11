@@ -1,0 +1,143 @@
+:root {
+	/* Light Mode Colors */
+	--bg-color: #e9d5b1;
+	--header-color: #d6bd8d;
+	--nav-color: #c4a474;
+	--card-color: #c7ac79;
+	--text-color: #000000;
+	--accent-color: #000000;
+}
+
+body.dark-mode {
+	/* Dark Mode Colors */
+	--bg-color: #2D3250;
+	--header-color: #424769;
+	--nav-color: #565e92;
+	--card-color: #424769;
+	--text-color: #d1c4e9;
+	--accent-color: #d1c4e9;
+}
+
+body {
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+}
+
+header {
+	background-color: var(--header-color);
+	color: var(--text-color);
+}
+header h1{
+	color: var(--text-color);
+}
+nav {
+	background-color: var(--nav-color);
+	color: var(--text-color);
+}
+
+nav a {
+	color: var(--text-color);
+}
+
+.game-card {
+	background-color: var(--card-color);
+	color: var(--text-color);
+}
+
+
+.toggle-container {
+    position: absolute;
+    top: 29px;
+    right: 70px;
+}
+
+label {
+	width: 100px;
+	height: 50px;
+	position: relative;
+	display: block;
+	background: #ebebeb;
+	border-radius: 200px;
+	box-shadow: inset 0px 5px 15px rgba(0, 0, 0, 0.4),
+		inset 0px -5px 15px rgba(255, 255, 255, 0.4);
+	cursor: pointer;
+	transition: 0.3s;
+	&:after {
+		content: "";
+		width: 40px;
+		height: 40px;
+		position: absolute;
+		top: 1px;
+		left: 1px;
+		background: linear-gradient(180deg, #ffcc89, #d8860b);
+		border-radius: 180px;
+		box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+		transition: 0.3s;
+	}
+	svg {
+		position: absolute;
+		width: 30px;
+		top: 3px;
+		z-index: 100;
+		&.sun {
+			left: 2.5px;
+			fill: #fff;
+			transition: 1s;
+		}
+		&.moon {
+			left: 74.5px;
+			fill: #7e7e7e;
+			transition: 1s;
+		}
+	}
+}
+
+input {
+	width: 0;
+	height: 0;
+	visibility: hidden;
+	&:checked + label {
+		background: #242424;
+		&:after {
+			left: auto; 
+			right: 1px; 
+			transform: none; 
+			background: linear-gradient(180deg, #777, #3a3a3a);
+		}
+		svg {
+			&.sun {
+				fill: #7e7e7e;
+			}
+			&.moon {
+				fill: #fff;
+			}
+		}
+		+ .background {
+			background: #242424;
+		}
+	}
+	&:active:after {
+		width: 40px;
+	}
+}
+
+.background {
+	width: 100vw;
+	height: 100vh;
+	background: #fff;
+	z-index: -1;
+	position: absolute;
+	transition: 1s;
+	background-color: var(--bg-color);
+}
+
+input:checked + label + .background {
+	body {
+		class: dark-mode;
+	}
+}

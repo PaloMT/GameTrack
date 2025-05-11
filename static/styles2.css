@@ -1,0 +1,138 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #51a2ee;
+    color: white;
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+nav {
+    margin: 20px 0;
+    text-align: center;
+}
+
+nav a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 18px;
+}
+
+nav a:hover {
+    color: #51a2ee;
+}
+
+.game-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.game-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    width: 200px;
+    box-shadow: 0px 4px 52px 5px #0382f9;
+    text-align: center;
+    position: relative;
+}
+
+.game-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.platino-date {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.rating-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+}
+
+.rating-item {
+    text-align: center;
+}
+
+.rating-label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.stars {
+    color: #9fcbf5;
+    font-size: 20px;
+}
+
+.stars .rated {
+    color: #0382f9;
+}
+
+.game-card img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+.game-card .delete {
+    background-color: transparent;
+    color: #9fcbf5;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    transition: color 0.3s ease;
+    width: 100%;
+}
+
+.game-card .delete:hover {
+    color: #0382f9;
+}
+
+.game-card .delete.clicked:hover {
+    color: #0382f9; /* Ensure clicked delete color persists on hover */
+}
+
+/* Align buttons in the game card */
+.game-card .actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.game-card .top-actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+}
+
+.game-card button {
+    flex: 1; /* Ensure buttons take equal space */
+    text-align: center;
+}

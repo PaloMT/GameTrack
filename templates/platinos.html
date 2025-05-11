@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platinos Conseguidos</title>
+    <link rel="stylesheet" href="/static/styles2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+s
+</head>
+<body>
+    <header>
+        <h1>🏆 Mis Trofeos de Platino</h1>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('main') }}">Inicio</a>
+        <a href="{{ url_for('played') }}">Jugados</a>
+        <a href="{{ url_for('favorites') }}">Favoritos</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </nav>
+
+    <div class="game-list">
+        {% for juego in juegos %}
+            {% if juego.platino %}
+                <div class="game-card" data-id="{{ juego.id }}">
+                    <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
+                    <div class="game-title">{{ juego.nombre }}</div>
+                    <div class="rating-container">
+                        <div class="rating-item">
+                            <div class="rating-label">Disfrute</div>
+                            <div class="stars" data-type="disfrute" data-id="{{ juego.id }}">
+                                {% for i in range(1, 6) %}
+                                    <i class="fas fa-star {% if juego.disfrute_rating is not none and i <= juego.disfrute_rating %}rated{% endif %}" 
+                                    data-value="{{ i }}"></i>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="rating-item">
+                            <div class="rating-label">Dificultad</div>
+                            <div class="stars" data-type="dificultad" data-id="{{ juego.id }}">
+                                {% for i in range(1, 6) %}
+                                    <i class="fas fa-star {% if juego.dificultad_rating is not none and i <= juego.dificultad_rating %}rated{% endif %}" 
+                                    data-value="{{ i }}"></i>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <button id="borrado" class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <script src="/static/scriptAlex.js"></script>
+</body>
+</html>
