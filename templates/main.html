@@ -48,7 +48,7 @@
         <a href="{{ url_for('favorites') }}">Favoritos</a>
         <a href="{{ url_for('platinos') }}">Platinos</a>
         <a href="{{ url_for('logout') }}">Cerrar sesión</a>
-        <a href="#" id="deleteAccountBtn" onclick="deleteAccount()">Borrar cuenta</a>
+        <button id="deleteAccountBtn" class="delete-account-btn">Eliminar Cuenta</button>
     </nav>
     
     <div class="game-list">
@@ -68,8 +68,8 @@
                     <div class="top-actions">
                         <button id="estrella" class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
                             <i class="fas fa-star"></i>
-                            <span class="like-count" id="like-count-{{ juego.id }}">{{ juego.like_count }}</span>
                         </button>
+                        <span class="like-count" id="like-count-{{ juego.id }}">{{ juego.like_count }}</span>
                         <button id="trofeo" class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
                             <i class="fas fa-trophy"></i>
                         </button>

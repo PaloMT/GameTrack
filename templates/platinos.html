@@ -6,7 +6,6 @@
     <title>Platinos Conseguidos</title>
     <link rel="stylesheet" href="/static/styles2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-s
 </head>
 <body>
     <header>
@@ -22,37 +21,43 @@ s
 
     <div class="game-list">
         {% for juego in juegos %}
-            {% if juego.platino %}
-                <div class="game-card" data-id="{{ juego.id }}">
-                    <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
-                    <div class="game-title">{{ juego.nombre }}</div>
-                    <div class="rating-container">
-                        <div class="rating-item">
-                            <div class="rating-label">Disfrute</div>
-                            <div class="stars" data-type="disfrute" data-id="{{ juego.id }}">
-                                {% for i in range(1, 6) %}
-                                    <i class="fas fa-star {% if juego.disfrute_rating is not none and i <= juego.disfrute_rating %}rated{% endif %}" 
-                                    data-value="{{ i }}"></i>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        
-                        <div class="rating-item">
-                            <div class="rating-label">Dificultad</div>
-                            <div class="stars" data-type="dificultad" data-id="{{ juego.id }}">
-                                {% for i in range(1, 6) %}
-                                    <i class="fas fa-star {% if juego.dificultad_rating is not none and i <= juego.dificultad_rating %}rated{% endif %}" 
-                                    data-value="{{ i }}"></i>
-                                {% endfor %}
-                            </div>
-                        </div>
+            <div class="game-card" data-id="{{ juego.id }}">
+                <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
+                <h3>{{ juego.nombre }}</h3>
+                <p>Año de salida: {{ juego.año_salida }}</p>
+                <div class="game-details">
+                    <p class="comments-short">{{ juego.comentarios[:100] }}...</p>
+                    <p class="comments-full" style="display: none;">{{ juego.comentarios }}</p>
+                    {% if juego.comentarios|length > 100 %}
+                        <button class="view-more-btn">▼</button>
+                    {% endif %}
+                </div>
+                <div class="actions">
+                    <div class="top-actions">
+                        <button id="estrella" class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <span class="like-count" id="like-count-{{ juego.id }}">{{ juego.like_count }}</span>
+                        <button id="trofeo" class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            <i class="fas fa-trophy"></i>
+                        </button>
                     </div>
+                    <button id="jugado" class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
+                        Marcar como Jugado
+                    </button>
                     <button id="borrado" class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
                 </div>
-            {% endif %}
+            </div>
         {% endfor %}
     </div>
 
     <script src="/static/scriptAlex.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        });
+    </script>
 </body>
 </html>
