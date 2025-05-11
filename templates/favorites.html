@@ -30,39 +30,37 @@
             <svg version="1.1" class="moon" xmlns="http://www.w3.org/2000/svg" ...></svg>
         </label>
     </div>
-
-    <section class="achievements">
-        <div id="favorites-list">
-            {% for juego in juegos %}
-                <div class="game-card" data-id="{{ juego.id }}">
-                    <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
-                    <h3>{{ juego.nombre }}</h3>
-                    <p>Año de salida: {{ juego.año_salida }}</p>
-                    <div class="game-details">
-                        <p class="comments-short">{{ juego.comentarios }}</p>
-                        <p class="comments-full">{{ juego.comentarios }}</p>
-                        {% if juego.comentarios|length > 100 %}
-                            <button class="view-more-btn">▼</button>
-                        {% endif %}
-                    </div>
-                    <div class="actions">
-                        <div class="top-actions">
-                            <button class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
-                                <i class="fas fa-star"></i>
-                            </button>
-                            <button class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
-                                <i class="fas fa-trophy"></i>
-                            </button>
-                        </div>
-                        <button class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
-                            Marcar como Jugado
-                        </button>
-                        <button class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
-                    </div>
+    <div class="game-list">
+        {% for juego in juegos %}
+            <div class="game-card" data-id="{{ juego.id }}">
+                <img src="{{ juego.imagen_del_juego }}" alt="{{ juego.nombre }}">
+                <h3>{{ juego.nombre }}</h3>
+                <p>Año de salida: {{ juego.año_salida }}</p>
+                <div class="game-details">
+                    <p class="comments-short">{{ juego.comentarios[:100] }}...</p>
+                    <p class="comments-full" style="display: none;">{{ juego.comentarios }}</p>
+                    {% if juego.comentarios|length > 100 %}
+                        <button class="view-more-btn">▼</button>
+                    {% endif %}
                 </div>
-            {% endfor %}
-        </div>
-    </section>
+                <div class="actions">
+                    <div class="top-actions">
+                        <button id="estrella" class="favorite {% if juego.favorito %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            <i class="fas fa-star"></i>
+                            <span class="like-count" id="like-count-{{ juego.id }}">{{ juego.like_count }}</span>
+                        </button>
+                        <button id="trofeo" class="trophy {% if juego.platino %} clicked {% endif %}" data-id="{{ juego.id }}">
+                            <i class="fas fa-trophy"></i>
+                        </button>
+                    </div>
+                    <button id="jugado" class="played {% if juego.jugado %} clicked {% endif %}" data-id="{{ juego.id }}">
+                        Marcar como Jugado
+                    </button>
+                    <button id="borrado" class="delete" data-id="{{ juego.id }}"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>    
 
     <button class="add-game-btn" id="addGameBtn" data-url="{{ url_for('add_game') }}">+</button>
 

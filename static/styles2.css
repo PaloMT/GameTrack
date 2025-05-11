@@ -1,15 +1,14 @@
 body {
     font-family: Arial, sans-serif;
-    background: radial-gradient(circle, #ffffff, #f1f1f1);
-    color: #51a2ee;
-    text-align: center;
+    background-color: #f5f5f5;
+    color: #333;
     margin: 0;
     padding: 0;
 }
 
 header {
-    background: radial-gradient(circle, #51a2ee, #5faaff);
-    color: rgb(255, 255, 255);
+    background-color: #51a2ee;
+    color: white;
     padding: 20px;
     font-size: 24px;
     font-weight: bold;
@@ -18,46 +17,18 @@ header {
 
 nav {
     margin: 20px 0;
+    text-align: center;
 }
 
 nav a {
-    color: #000000;
+    color: #333;
     text-decoration: none;
     margin: 0 15px;
     font-size: 18px;
-    transition: color 0.3s;
-    
 }
 
 nav a:hover {
-    color: #4a90e2;
-}
-
-.platinum-list {
-    margin-top: 20px;
-}
-
-.grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-}
-
-.trophy-card:hover {
-    transform: scale(1.05);
-}
-
-.grid-container {
-    flex-wrap: wrap;
-    justify-content: center;
-    display: flex;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Se adapta a la pantalla */
-    gap: 20px;
-    padding: 20px;
-    justify-items: center; /* Centra los elementos */
-    align-items: start; /* Permite que cada tarjeta tenga diferente altura */
+    color: #51a2ee;
 }
 
 .game-list {
@@ -68,14 +39,52 @@ nav a:hover {
 }
 
 .game-card {
-    color:#ffffff;
-    background-color: #51a2ee;
+    background-color: white;
     border-radius: 8px;
-    margin: 10px;
     padding: 20px;
+    margin: 10px;
     width: 200px;
+    box-shadow: 0px 4px 52px 5px #0382f9;
     text-align: center;
     position: relative;
+}
+
+.game-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.platino-date {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.rating-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+}
+
+.rating-item {
+    text-align: center;
+}
+
+.rating-label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.stars {
+    color: #9fcbf5;
+    font-size: 20px;
+}
+
+.stars .rated {
+    color: #0382f9;
 }
 
 .game-card img {
@@ -83,129 +92,15 @@ nav a:hover {
     border-radius: 8px;
 }
 
-.game-card h3 {
-    font-size: 1.5em;
-    margin: 15px 0;
-}
-
-/* Botones generales */
-.game-card button {
-    background-color: transparent;
+hr {
     border: none;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    margin: 5px;
-    width: 100%;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
 }
 
-.game-card button:hover {
-    color: #ffffff;
-}
-
-/* Botón Jugado */
-.game-card button.played {
-    background-color: transparent;
-    padding: 8px;
-    font-size: 1em;
-    border-radius: 8px;
-    border: 2px solid #d4c2b0;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.game-card button.played:hover {
-    background-color: transparent;
-    color: #FFD700;
-}
-
-.game-card button.played.clicked {
-    background-color: #A3D9A5;
-    color: #FFD700;
-    border: 2px solid #A3D9A5;
-}
-
-.game-card button.played.clicked:hover {
-    background-color: #A3D9A5; /* Ensure clicked background persists on hover */
-    color: #5faaff;
-    border: 2px solid #A3D9A5;
-}
-
-/* Contenedor de botones de acciones */
-.game-card .actions {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.game-card .top-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-
-/* Botón de Favoritos y Trofeo */
-.game-card button.favorite,
-.game-card button.trophy {
-    background-color: transparent;
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.game-card button.favorite.clicked {
-    color: #FFD700;
-    background-color: transparent;
-}
-
-.game-card button.trophy.clicked {
-    color: rgb(184, 223, 255);
-    background-color: transparent;
-}
-
-.game-card button.favorite.clicked i{
-    background-color: transparent;
-}
-.game-card button.trophy.clicked i {
-    background-color: transparent;
-}
-
-.game-card button.favorite:hover{
-    color: #FFD700; /* Match the bin hover effect */
-    background-color: transparent; /* Ensure no background color */
-}
-.game-card button.trophy:hover {
-    color: rgb(184, 223, 255); /* Match the bin hover effect */
-    background-color: transparent; /* Ensure no background color */
-}
-
-.game-card button.favorite i,
-.game-card button.trophy i {
-    font-size: 1.5em;
-}
-
-.like-count {
-    font-size: 0.9em;
-    color: var(--icon-color);
-    text-align: center;
-    margin-top: 5px;
-}
-
-/* Botón de eliminación */
 .game-card .delete {
     background-color: transparent;
-    color: var(--delete-color);
+    color: #9fcbf5;
     border: none;
     cursor: pointer;
     font-size: 1.5em;
@@ -214,9 +109,30 @@ nav a:hover {
 }
 
 .game-card .delete:hover {
-    color: crimson
+    color: #0382f9;
 }
 
 .game-card .delete.clicked:hover {
-    color: crimson; /* Ensure clicked delete color persists on hover */
+    color: #0382f9; /* Ensure clicked delete color persists on hover */
+}
+
+/* Align buttons in the game card */
+.game-card .actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.game-card .top-actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+}
+
+.game-card button {
+    flex: 1; /* Ensure buttons take equal space */
+    text-align: center;
 }

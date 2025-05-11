@@ -1,11 +1,53 @@
-// scriptAlex.js - Updated version
+
 document.addEventListener("DOMContentLoaded", () => {
     initializeButtons();
     setupDarkModeToggle();
     setupViewMoreButtons();
     setupAddGameButton();
     initializeButtonStates();
-    setupPlatinumList(); // Consolidate platinum list initialization here
+    setupRatingStars();
+    initializeStarRatings(); 
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.stars i').forEach(star => {
+        star.addEventListener('click', function() {
+            const container = this.parentElement;
+            const ratingType = container.dataset.type;
+            const juegoId = container.dataset.id;
+            const ratingValue = parseInt(this.dataset.value);
+            
+            // Update UI
+            const stars = container.querySelectorAll('i');
+            stars.forEach((s, index) => {
+                s.classList.toggle('rated', index < ratingValue);
+            });
+
+            // Send to server
+            fetch('/update_rating', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}'  // Add CSRF protection
+                },
+                body: JSON.stringify({
+                    juego_id: juegoId,
+                    rating_type: ratingType,
+                    rating_value: ratingValue
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    console.error('Failed to update rating');
+                    // Revert UI if needed
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
 });
 
 function initializeButtons() {
@@ -135,25 +177,6 @@ function setupAddGameButton() {
     }
 }
 
-function setupDarkModeToggle() {
-    const toggle = document.getElementById('darkmode-toggle');
-    if (toggle) {
-        const body = document.body;
-
-        toggle.addEventListener('change', () => {
-            if (toggle.checked) {
-                body.classList.add('dark-mode');
-            } else {
-                body.classList.remove('dark-mode');
-            }
-        });
-
-        if (toggle.checked) {
-            body.classList.add('dark-mode');
-        }
-    }
-}
-
 function updateFavoriteButton(button, isFavorite) {
     if (isFavorite) {
         button.classList.add('clicked');
@@ -211,36 +234,6 @@ function initializeButtonStates() {
     });
 }
 
-function setupPlatinumList() {
-    const platinumList = document.getElementById('platinum-list');
-    const games = JSON.parse(localStorage.getItem('games')) || [];
-
-    if (!platinumList) return;
-
-    console.log(games); // Debugging stored games
-
-    const platinumGames = games.filter(game => game.platinum === true);
-
-    platinumList.innerHTML = '';
-
-    if (platinumGames.length === 0) {
-        platinumList.innerHTML = '<p>No tienes trofeos de platino aún. ¡Sigue jugando! 🎮</p>';
-    } else {
-        platinumGames.forEach(game => {
-            const trophyCard = document.createElement('div');
-            trophyCard.classList.add('trophy-card');
-            trophyCard.innerHTML = `
-                <img src="platinum.png" alt="Trofeo Platino">
-                <h2>${game.name}</h2>
-                <p><strong>Consola:</strong> ${game.console}</p>
-                <p><strong>Año:</strong> ${game.year}</p>
-                <p><strong>Fecha:</strong> ${game.date || 'Desconocida'}</p>
-            `;
-            platinumList.appendChild(trophyCard);
-        });
-    }
-}
-
 function setupDarkModeToggle() {
     const toggle = document.getElementById('darkmode-toggle');
     const body = document.body;
@@ -266,4 +259,157 @@ function setupDarkModeToggle() {
             }
         });
     }
+}
+
+function setupRatingStars() {
+    document.querySelectorAll('.stars').forEach(starContainer => {
+        starContainer.querySelectorAll('i').forEach(star => {
+            star.addEventListener('click', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                const type = starContainer.getAttribute('data-type');
+                const gameId = starContainer.getAttribute('data-id');
+                const ratingGroup = starContainer.closest('.rating-group');
+                
+                // Update UI immediately
+                starContainer.setAttribute('data-rating', value);
+                starContainer.querySelectorAll('i').forEach((s, index) => {
+                    if (index < value) {
+                        s.classList.add('rated');
+                    } else {
+                        s.classList.remove('rated');
+                    }
+                });
+                
+                // Update the displayed value
+                if (ratingGroup) {
+                    const valueDisplay = ratingGroup.querySelector('.rating-value');
+                    if (valueDisplay) {
+                        valueDisplay.textContent = `${value}/5`;
+                    }
+                }
+
+                // Send to server
+                fetch(`/api/set_rating/${gameId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tipo: type,
+                        valor: value
+                    })
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    // Revert if failed
+                    const currentRating = parseInt(starContainer.getAttribute('data-rating') || 0);
+                    starContainer.querySelectorAll('i').forEach((s, index) => {
+                        if (index < currentRating) {
+                            s.classList.add('rated');
+                        } else {
+                            s.classList.remove('rated');
+                        }
+                    });
+                });
+            });
+        });
+    });
+}
+
+function setupRatingStars() {
+    document.querySelectorAll('.stars').forEach(starContainer => {
+        starContainer.querySelectorAll('i').forEach(star => {
+            star.addEventListener('click', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                const type = starContainer.getAttribute('data-type');
+                const gameId = starContainer.getAttribute('data-id');
+                const ratingGroup = starContainer.closest('.rating-group');
+                
+                // Update UI immediately
+                starContainer.setAttribute('data-rating', value);
+                starContainer.querySelectorAll('i').forEach((s, index) => {
+                    if (index < value) {
+                        s.classList.add('rated');
+                    } else {
+                        s.classList.remove('rated');
+                    }
+                });
+                
+                // Update the displayed value
+                if (ratingGroup) {
+                    const valueDisplay = ratingGroup.querySelector('.rating-value');
+                    if (valueDisplay) {
+                        valueDisplay.textContent = `${value}/5`;
+                    }
+                }
+
+                // Send to server
+                fetch(`/api/set_rating/${gameId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tipo: type,
+                        valor: value
+                    })
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    // Revert if failed
+                    const currentRating = parseInt(starContainer.getAttribute('data-rating') || 0);
+                    starContainer.querySelectorAll('i').forEach((s, index) => {
+                        if (index < currentRating) {
+                            s.classList.add('rated');
+                        } else {
+                            s.classList.remove('rated');
+                        }
+                    });
+                });
+            });
+            
+            // Add hover effect
+            star.addEventListener('mouseover', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                const stars = starContainer.querySelectorAll('i');
+                stars.forEach((s, index) => {
+                    if (index < value) {
+                        s.classList.add('hover');
+                    } else {
+                        s.classList.remove('hover');
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseout', function() {
+                const stars = starContainer.querySelectorAll('i');
+                stars.forEach(s => s.classList.remove('hover'));
+            });
+        });
+    });
+}
+
+function initializeStarRatings() {
+    document.querySelectorAll('.stars').forEach(starContainer => {
+        const stars = starContainer.querySelectorAll('i');
+        const currentRating = parseInt(starContainer.getAttribute('data-rating') || 0);
+        const ratingGroup = starContainer.closest('.rating-group');
+        
+        // Update star display
+        stars.forEach((star, index) => {
+            if (index < currentRating) {
+                star.classList.add('rated');
+            } else {
+                star.classList.remove('rated');
+            }
+        });
+        
+        // Update the displayed value
+        if (ratingGroup) {
+            const valueDisplay = ratingGroup.querySelector('.rating-value');
+            if (valueDisplay) {
+                valueDisplay.textContent = `${currentRating}/5`;
+            }
+        }
+    });
 }

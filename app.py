@@ -24,8 +24,10 @@ def main():
 
         query = """
             SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
-                   uj.favorito, uj.jugado, uj.platino,
-                   (SELECT COUNT(*) FROM usuarios_juegos uj2 
+                uj.favorito, uj.jugado, uj.platino, 
+                uj.disfrute as disfrute_rating,  # Renamed for clarity
+                uj.dificultad as dificultad_rating,  # Renamed for clarity
+                (SELECT COUNT(*) FROM usuarios_juegos uj2 
                     INNER JOIN juegos j2 ON uj2.juego_id = j2.id 
                     WHERE j2.nombre = j.nombre AND uj2.favorito = TRUE) AS like_count
             FROM juegos j
@@ -55,13 +57,15 @@ def played():
 
         query = """
             SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
-                   uj.favorito, uj.jugado, uj.platino,
-                   (SELECT COUNT(*) FROM usuarios_juegos uj2 
+                uj.favorito, uj.jugado, uj.platino, 
+                uj.disfrute as disfrute_rating,  # Renamed for clarity
+                uj.dificultad as dificultad_rating,  # Renamed for clarity
+                (SELECT COUNT(*) FROM usuarios_juegos uj2 
                     INNER JOIN juegos j2 ON uj2.juego_id = j2.id 
                     WHERE j2.nombre = j.nombre AND uj2.favorito = TRUE) AS like_count
             FROM juegos j
             INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
-            WHERE uj.usuario_id = %s AND uj.jugado = TRUE
+            WHERE uj.usuario_id = %s
         """
         cursor.execute(query, (usuario_id,))
         juegos = cursor.fetchall()
@@ -86,13 +90,15 @@ def favorites():
 
         query = """
             SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
-                   uj.favorito, uj.jugado, uj.platino,
-                   (SELECT COUNT(*) FROM usuarios_juegos uj2 
+                uj.favorito, uj.jugado, uj.platino, 
+                uj.disfrute as disfrute_rating,  # Renamed for clarity
+                uj.dificultad as dificultad_rating,  # Renamed for clarity
+                (SELECT COUNT(*) FROM usuarios_juegos uj2 
                     INNER JOIN juegos j2 ON uj2.juego_id = j2.id 
                     WHERE j2.nombre = j.nombre AND uj2.favorito = TRUE) AS like_count
             FROM juegos j
             INNER JOIN usuarios_juegos uj ON j.id = uj.juego_id
-            WHERE uj.usuario_id = %s AND uj.favorito = TRUE
+            WHERE uj.usuario_id = %s
         """
         cursor.execute(query, (usuario_id,))
         juegos = cursor.fetchall()
@@ -114,11 +120,12 @@ def platinos():
     try:
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
-
         query = """
             SELECT j.id, j.nombre, j.imagen_del_juego, j.año_salida, j.comentarios,
-                   uj.favorito, uj.jugado, uj.platino,
-                   (SELECT COUNT(*) FROM usuarios_juegos uj2 
+                uj.favorito, uj.jugado, uj.platino,
+                uj.disfrute as disfrute_rating,
+                uj.dificultad as dificultad_rating,
+                (SELECT COUNT(*) FROM usuarios_juegos uj2 
                     INNER JOIN juegos j2 ON uj2.juego_id = j2.id 
                     WHERE j2.nombre = j.nombre AND uj2.favorito = TRUE) AS like_count
             FROM juegos j
@@ -456,10 +463,80 @@ def delete_account():
     except mysql.connector.Error as err:
         return jsonify({"error": f"Error en la base de datos: {err}"}), 500
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template(url_for("404")), 404
+@app.route('/api/set_rating/<int:juego_id>', methods=['POST'])
+def set_rating(juego_id):
+    if "usuario_id" not in session:
+        return jsonify({"error": "Usuario no autenticado"}), 401
 
+    data = request.get_json()
+    tipo = data.get('tipo')  # 'disfrute' or 'dificultad'
+    valor = data.get('valor')  # 1-5
+    usuario_id = session["usuario_id"]
+
+    if tipo not in ['disfrute', 'dificultad'] or not (1 <= valor <= 5):
+        return jsonify(success=False), 400
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Check if relationship exists
+        cursor.execute("SELECT * FROM usuarios_juegos WHERE usuario_id = %s AND juego_id = %s", 
+                      (usuario_id, juego_id))
+        rel = cursor.fetchone()
+
+        if not rel:
+            # Create new with default 0 for the other rating
+            cursor.execute(
+                "INSERT INTO usuarios_juegos (usuario_id, juego_id, disfrute, dificultad) VALUES (%s, %s, %s, %s)",
+                (usuario_id, juego_id, 
+                 0 if tipo == 'dificultad' else valor, 
+                 0 if tipo == 'disfrute' else valor)
+            )
+        else:
+            # Update only the specified rating
+            cursor.execute(
+                f"UPDATE usuarios_juegos SET {tipo} = %s WHERE usuario_id = %s AND juego_id = %s",
+                (valor, usuario_id, juego_id)
+            )
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+        
+        return jsonify(success=True)
+    except mysql.connector.Error as err:
+        return jsonify({"error": f"Error en la base de datos: {err}"}), 500
+
+@app.route('/update_rating', methods=['POST'])
+def update_rating():
+    if not current_user.is_authenticated:
+        return jsonify({'success': False, 'message': 'Not authenticated'})
+
+    data = request.get_json()
+    juego_id = data.get('juego_id')
+    rating_type = data.get('rating_type')
+    rating_value = data.get('rating_value')
+
+    # Find the user-game relationship
+    user_game = db.session.query(usuarios_juegos).filter_by(
+        usuario_id=current_user.id,
+        juego_id=juego_id
+    ).first()
+
+    if not user_game:
+        return jsonify({'success': False, 'message': 'Game not found for user'})
+
+    if rating_type == 'disfrute':
+        user_game.disfrute = rating_value
+    elif rating_type == 'dificultad':
+        user_game.dificultad = rating_value
+    else:
+        return jsonify({'success': False, 'message': 'Invalid rating type'})
+
+    db.session.commit()
+    return jsonify({'success': True})
+    
 if __name__ == '__main__':
     conn = get_db_connection()
     if conn:
